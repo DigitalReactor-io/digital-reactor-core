@@ -1,1 +1,1 @@
-# digitalreactor-core
+# digital-reactor-core
