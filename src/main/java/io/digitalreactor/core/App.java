@@ -13,14 +13,10 @@ public class App {
         Vertx vertx = Vertx.vertx();
         DeploymentOptions deploymentOptions =  new DeploymentOptions().setWorker(true);
 
-        Loader loader = new Loader();
-        Processor processor = new Processor();
         WebServer restController = new WebServer();
         SummaryDispatcherVerticle summaryDispatcherVerticle = new SummaryDispatcherVerticle();
 
-        vertx.deployVerticle(loader);
         vertx.deployVerticle(summaryDispatcherVerticle);
-        vertx.deployVerticle(processor, deploymentOptions);
         vertx.deployVerticle(restController, deploymentOptions);
     }
 }
