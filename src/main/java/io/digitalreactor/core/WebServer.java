@@ -3,24 +3,18 @@ package io.digitalreactor.core;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
+import io.vertx.ext.web.Router;
 
 /**
  * Created by ingvard on 03.04.16.
  */
-public class RestController extends AbstractVerticle {
+public class WebServer extends AbstractVerticle {
 
-    @Override
     public void start() throws Exception {
         HttpServer httpServer = vertx.createHttpServer();
         EventBus eventBus = vertx.eventBus();
+        Router router = Router.router(vertx);
 
-        httpServer.requestHandler(context -> {
-
-            Object message = new Object();
-            eventBus.publish(Processor.CALCULATE, message);
-
-            context.response().end("Ok");
-
-        }).listen(8080);
+        vertx.createHttpServer().requestHandler(router::accept).listen(8080);
     }
 }

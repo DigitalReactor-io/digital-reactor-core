@@ -13,7 +13,7 @@ public class App {
 
         Loader loader = new Loader();
         Processor processor = new Processor();
-        RestController restController = new RestController();
+        WebServer restController = new WebServer();
 
         vertx.deployVerticle(loader);
         vertx.deployVerticle(processor, deploymentOptions);
