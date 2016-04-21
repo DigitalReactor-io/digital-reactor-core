@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api;
+package io.digitalreactor.core.gateway.api;
 
 /**
  * Created by ingvard on 06.04.16.

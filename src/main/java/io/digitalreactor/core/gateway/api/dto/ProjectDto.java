@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api.dto;
+package io.digitalreactor.core.gateway.api.dto;
 
 /**
  * Created by ingvard on 06.04.16.
