@@ -22,7 +22,7 @@ public class WebServer extends AbstractVerticle {
         router.route("/images/*").handler(StaticHandler.create("src/main/webapp/images"));
 
         router.get().handler(ctx -> {
-            engine.render(ctx, "src/main/webapp/index.html", res -> {
+            engine.render(ctx, "src/main/webapp/index.hbs", res -> {
                 if (res.succeeded()) {
                     ctx.response().end(res.result());
                 } else {
@@ -31,6 +31,6 @@ public class WebServer extends AbstractVerticle {
             });
         });
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+        vertx.createHttpServer().requestHandler(router::accept).listen(80);
     }
 }
