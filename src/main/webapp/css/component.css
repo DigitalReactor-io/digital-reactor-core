@@ -1,0 +1,66 @@
+/**
+* Section for company stack
+**/
+.technology-box {
+    width: 100%;
+    background: #cccccc;
+    position: relative;
+    height: 100px;
+    margin-bottom: 35px;
+}
+
+.technology-box-content {
+    text-align: center;
+}
+
+.technology-box-content img {
+    margin-top: 5px;
+    height: 65px;
+}
+
+.technology-box-title {
+    color: #ffffff;
+    position: absolute;
+    background: #A1A1A1;
+    height: 35px;
+    padding: 5px;
+    bottom: -15px;
+    width: 200px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/**
+* wizard-workflow
+**/
+
+.wizard-workflow {
+
+}
+
+.wizard-workflow-circle {
+    border-radius: 50%;
+    background-color: #707070;
+    width: 61px;
+    height: 61px;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+    line-height: 61px;
+}
+
+.circle-active {
+    line-height: 56px;
+
+    padding: 2px;
+    border: 2px solid #707070;
+    background-clip: content-box;
+}
+
+.wizard-workflow-down-arrow {
+    margin: 0 auto;
+}

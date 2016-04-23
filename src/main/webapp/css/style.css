@@ -1,0 +1,290 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700,700italic,400italic&subset=latin,cyrillic,cyrillic-ext,latin-ext);
+
+body {
+!important;
+    font-family: 'PT Sans', sans-serif;
+}
+
+header {
+    margin-top: 25px;
+}
+
+.header-parallax-box {
+    background-color: #707070;
+    color: #ffffff;
+}
+
+.header-logo {
+
+}
+
+.header-logo-image {
+    display: inline;
+    vertical-align: top;
+}
+
+.header-logo-title {
+    display: inline;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 43px;
+    vertical-align: top;
+}
+
+.navigation ul {
+    margin: 0;
+    padding: 0;
+}
+
+.navigation li {
+    display: inline;
+    list-style: none;
+}
+
+.navigation a {
+    color: #f7f7f7;
+    font-size: 18px;
+    font-weight: 400;
+    text-decoration: none;
+    line-height: 43px;
+}
+
+.button-sign-up {
+    border: 1px solid #ffffff;
+    padding: 5px;
+    text-align: center;
+}
+
+.proposal {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.proposal-button {
+    background: rgba(232, 246, 255, 0.11);
+    border: 1px solid #ffffff;
+    padding: 5px;
+    width: 300px;
+    margin: 0 auto;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    transition: 1s ease-out 0.1s;;
+}
+
+.proposal-button:hover {
+    background: rgba(232, 246, 255, 0.24);
+    border: 1px solid #b9b9b9;
+}
+
+.benefits-block {
+    margin-top: 50px;
+    margin-bottom: 35px;
+}
+
+.us-benefits {
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.benefit {
+    margin-top: 20px;
+}
+
+.benefit-icon {
+    float: left;
+}
+
+.benefit-icon i {
+    font-size: 25px;
+    line-height: 35px;
+}
+
+.benefit-feature {
+    margin-left: 40px;
+}
+
+.benefits-title {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.benefits-description {
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+}
+
+/**
+* how-it-works
+**/
+
+.how-it-works-box {
+    margin-bottom: 20px;
+}
+
+.how-it-works-title {
+    color: #757575;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.wizard-workflow {
+    width: 61px;
+    margin: 0 auto;
+}
+
+.wizard-workflow-down-arrow {
+    text-align: center;
+}
+
+.wizard-workflow-down-arrow div {
+    display: inline;
+    line-height: 35px;
+}
+
+.wizard-workflow-steps {
+    width: 330px;
+}
+
+.wizard-workflow-steps-title {
+    color: #888888;
+    font-size: 30px;
+    font-weight: 400;
+
+}
+
+.wizard-workflow-steps-notice {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.wizard-workflow-steps-illustration {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.wizard-workflow-benefits-title {
+    color: #888888;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.wizard-workflow-benefits-notice {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.wizard-workflow-benefits-notice-title {
+    color: #888888;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: left;
+}
+
+/**
+* platform-features
+**/
+
+.platform-features {
+    background-color: #cccccc;
+}
+
+.platform-features-title {
+    color: #737373;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.platform-features-list {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.platform-features-list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.platform-features-list li {
+    margin-right: 35px;
+    display: inline;
+}
+
+.platform-features-list li:last-child {
+    margin-right: 0;
+}
+
+.platform-feature-title {
+    color: #737373;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.platform-feature-description {
+    width: 600px;
+    margin: 0 auto;
+    color: #737373;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+
+}
+
+.platform-feature-report-example {
+    margin: 10px auto 35px;
+    width: 620px;
+}
+
+.platform-feature-report-example img {
+    width: 620px;
+}
+
+/**
+* company-stack
+**/
+
+.company-stack {
+
+}
+
+.company-stack-title {
+    color: #9b9b9b;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 15px;
+}
+
+footer {
+    background: #333333;
+    color: #ffffff;
+}
+
+.footer-company-name {
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+}
+    
+    
