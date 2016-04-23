@@ -2,6 +2,7 @@ package io.digitalreactor.core;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 
 /**
@@ -15,9 +16,13 @@ public class WebServer extends AbstractVerticle {
 
         final Router router = Router.router(vertx);
 
+        router.route("/js/*").handler(StaticHandler.create("src/main/webapp/js"));
+        router.route("/fonts/*").handler(StaticHandler.create("src/main/webapp/fonts"));
+        router.route("/css/*").handler(StaticHandler.create("src/main/webapp/css"));
+        router.route("/images/*").handler(StaticHandler.create("src/main/webapp/images"));
+
         router.get().handler(ctx -> {
-            ctx.put("name", "test");
-            engine.render(ctx, "src/main/webapp/index.hbs", res -> {
+            engine.render(ctx, "src/main/webapp/index.html", res -> {
                 if (res.succeeded()) {
                     ctx.response().end(res.result());
                 } else {
