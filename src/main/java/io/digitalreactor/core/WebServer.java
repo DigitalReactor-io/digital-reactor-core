@@ -31,6 +31,6 @@ public class WebServer extends AbstractVerticle {
             });
         });
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(80);
+        vertx.createHttpServer().requestHandler(router::accept).listen(8080);
     }
 }
