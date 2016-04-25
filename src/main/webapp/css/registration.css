@@ -1,0 +1,154 @@
+body {
+    height: 100%;
+    background-color: #484848;
+}
+
+.registration-logo-padding {
+    text-align: center;
+    margin-top: 40px;
+    height: 109px;
+}
+
+.registration-logo-padding-image {
+    display: inline;
+}
+
+.registration-logo-padding-image img {
+    height: 109px;
+}
+
+.registration-logo-padding-name {
+    vertical-align: middle;
+    display: inline;
+    color: #ffffff;
+    font-size: 60px;
+    font-weight: 700;
+}
+
+/**
+* content
+**/
+.registration-padding {
+    margin: 20px auto;
+    width: 770px;
+    overflow: hidden;
+}
+
+.registration-padding-step {
+    height: 650px;
+
+    padding: 5px 10px;
+    background-color: #cccccc;
+    width: 399px;
+    float: left;
+    position: relative;
+
+}
+
+.registration-padding-information {
+
+    padding: 5px 10px;
+    height: 650px;
+    background-color: #a2a2a2;
+    width: 371px;
+    float: left;
+
+}
+
+.registration-padding-step-header-b {
+    height: 20px;
+    position: relative;
+}
+
+.registration-padding-step-header-number {
+    color: #787676;
+    font-size: 20px;
+    font-weight: 400;
+    position: absolute;
+}
+
+.registration-padding-step-header-title {
+    color: #787676;
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    right: 0;
+}
+
+.registration-padding-step-header-delimiter {
+    margin-top: 7px;
+    margin-bottom: 4px;
+    background: #484848;
+    height: 1px;
+    width: 100%;
+}
+
+.registration-padding-step-info {
+    width: 330px;
+    margin: 80px auto;
+    /*text-align: center;*/
+    color: #5f5f5f;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.registration-padding-step-input {
+    padding: 5px 15px;
+    background: #a2a2a2;
+    color: #fffeff;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: left;
+    border: none;
+}
+
+.registration-padding-step-button {
+    background: #484848;
+    color: #fffeff;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    padding: 15px 50px;
+    border: none;
+}
+
+.registration-input-position {
+    margin-left: 50px;
+}
+
+.registration-button-position {
+    position: absolute;
+    left: 120px;
+    bottom: 45px;
+}
+
+.registration-padding-information-title {
+    color: #5f5f5f;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.registration-padding-information-description {
+    padding-top: 20px;
+    color: #5f5f5f;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.registration-padding-information-motivation {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.registration-padding-information-arrow-b {
+    margin-left: -10px;
+    width: 371px;
+    height: 278px;
+    background: url("../images/arrow_bg.png");
+    background-size: cover;
+    padding-top: 65px;
+    text-align: center;
+}
