@@ -1,0 +1,27 @@
+CREATE TABLE public.users
+(
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(60),
+    password VARCHAR(255) NOT NULL,
+    registration_date DATE
+);
+CREATE UNIQUE INDEX users_id_uindex ON public.users (id);
+CREATE UNIQUE INDEX users_email_uindex ON public.users (email);
+
+CREATE TABLE public.accesses
+(
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT accesses_users_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE public.projects
+(
+    id SERIAL PRIMARY KEY,
+    project_name VARCHAR(255) NOT NULL,
+    counter_id INT NOT NULL,
+    access_id INT NOT NULL,
+    last_update DATE,
+    CONSTRAINT projects_accesses_id_fk FOREIGN KEY (access_id) REFERENCES accesses (id)
+);
