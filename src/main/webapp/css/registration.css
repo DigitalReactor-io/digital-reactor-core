@@ -112,6 +112,11 @@ body {
     border: none;
 }
 
+.registration-padding-step-button a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
 .registration-input-position {
     margin-left: 50px;
 }
