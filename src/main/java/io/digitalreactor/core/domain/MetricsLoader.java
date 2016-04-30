@@ -1,6 +1,5 @@
 package io.digitalreactor.core.domain;
 
-import io.digitalreactor.core.domain.messages.CreateReportMessage;
 import io.digitalreactor.core.domain.messages.LoadReportDataMessage;
 
 /**
@@ -8,15 +7,7 @@ import io.digitalreactor.core.domain.messages.LoadReportDataMessage;
  */
 public class MetricsLoader {
 
-    HttpClient httpClient;
-
-    public void load(LoadReportDataMessage loadReportDataMessage) {
-
-       // loadReportDataMessage.reportType
-
-        //rowData = Client.reportLoader(loadReportDataMessage.reportType).load();
-
-       // send()
-
+    public String load(LoadReportDataMessage loadReportDataMessage) {
+        return null;
     }
 }
