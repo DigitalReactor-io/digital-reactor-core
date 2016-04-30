@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class YandexApiTest {
 
-    private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx(), "a7a9c35d56e6489086712d50f0fe9e23");
+    private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx(), "ARRC9_4AAr_pqwmAhZwJQMWm2OAqi47ewg");
 
     @Test
     public void tables_async(TestContext context) {

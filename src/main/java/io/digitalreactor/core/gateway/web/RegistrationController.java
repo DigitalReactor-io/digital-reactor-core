@@ -1,5 +1,8 @@
 package io.digitalreactor.core.gateway.web;
 
+import io.digitalreactor.core.api.RequestCounterList;
+import io.digitalreactor.core.api.YandexApi;
+import io.digitalreactor.core.api.YandexApiImpl;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
@@ -85,6 +88,10 @@ public class RegistrationController {
             httpResponse.bodyHandler(bufferBody -> {
                 if (httpResponse.statusCode() == 200) {
                     String accessToken = bufferBody.toJsonObject().getString("access_token");
+
+                   YandexApi yandexApi = new YandexApiImpl(vertx, accessToken);
+                    String json = yandexApi.counters(RequestCounterList.of().build());
+
                     //TODO[St.maxim] get counter list
                 }
             });

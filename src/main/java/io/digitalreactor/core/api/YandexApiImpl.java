@@ -33,7 +33,7 @@ public class YandexApiImpl implements YandexApi {
                         .setVerifyHost(false)
                         .setDefaultHost(API_HOST)
         );
-        this.token = "&oauth_token=" + token;
+        this.token = "oauth_token=" + token;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class YandexApiImpl implements YandexApi {
 
     private String executeRequest(Request request) {
         CompletableFuture<String> future = new CompletableFuture<>();
-        httpClient.getAbs(path + request.toQuery() + token, response -> {
+        httpClient.getAbs(path + request.prefix() + token + request.toQuery(), response -> {
             response.bodyHandler(body -> {
                 future.complete(body.toString());
             });
@@ -67,7 +67,7 @@ public class YandexApiImpl implements YandexApi {
     }
 
     private void executeRequest(Request request, Consumer<String> consumer) {
-        httpClient.getAbs(path + request.toQuery() + token, response -> {
+        httpClient.getAbs(path + request.prefix() + token + request.toQuery(), response -> {
             response.bodyHandler(body -> {
                 vertx.executeBlocking(future -> {
                             consumer.accept(body.toString());

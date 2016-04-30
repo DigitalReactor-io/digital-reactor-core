@@ -8,4 +8,6 @@ package io.digitalreactor.core.api;
 public interface Request {
 
     String toQuery();
+
+    String prefix();
 }

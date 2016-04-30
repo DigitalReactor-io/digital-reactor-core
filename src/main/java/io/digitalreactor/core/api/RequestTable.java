@@ -22,6 +22,8 @@ public class RequestTable implements Request{
     private Integer offset;
     private Boolean pretty;
 
+    private String PREFIX = "/stat/v1/data?";
+
     private RequestTable(Builder builder) {
         this.directClientLogins = builder.directClientLogins;
         this.ids = builder.ids;
@@ -77,7 +79,7 @@ public class RequestTable implements Request{
 
     @Override
     public String toQuery() {
-        final StringBuilder builder = new StringBuilder("/stat/v1/data?");
+        final StringBuilder builder = new StringBuilder();
         if (isNotEmpty(directClientLogins)) {
             builder.append("&direct_client_logins=").append(StringUtils.join(directClientLogins, ","));
         }
@@ -106,6 +108,11 @@ public class RequestTable implements Request{
             builder.append("&pretty=").append(pretty);
         }
         return builder.toString().replaceFirst("&", "");
+    }
+
+    @Override
+    public String prefix() {
+        return PREFIX;
     }
 
     public static Builder of() {

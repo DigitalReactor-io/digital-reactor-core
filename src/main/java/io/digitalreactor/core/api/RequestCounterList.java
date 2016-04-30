@@ -25,7 +25,19 @@ public class RequestCounterList implements Request {
     private Status status;
     private Type type;
 
+    private String PREFIX = "/management/v1/counters?";
+
     public RequestCounterList(Builder builder) {
+        this.favorite = builder.favorite;
+        this.field = builder.field;
+        this.labelId = builder.labelId;
+        this.offset = builder.offset;
+        this.perPage = builder.perPage;
+        this.permission = builder.permission;
+        this.reverse = builder.reverse;
+        this.searchString = builder.searchString;
+        this.status = builder.status;
+        this.type = builder.type;
     }
 
     public Boolean getFavorite() {
@@ -70,7 +82,7 @@ public class RequestCounterList implements Request {
 
     @Override
     public String toQuery() {
-        final StringBuilder builder = new StringBuilder("/management/v1/counters?");
+        final StringBuilder builder = new StringBuilder();
         if (favorite != null) {
             int f = 0;
             if (favorite) {
@@ -105,7 +117,12 @@ public class RequestCounterList implements Request {
 
         // TODO: 30.04.16  complete all field
 
-        return builder.toString().replaceFirst("&", "");
+        return builder.toString();
+    }
+
+    @Override
+    public String prefix() {
+        return PREFIX;
     }
 
     public static RequestCounterList.Builder of() {
