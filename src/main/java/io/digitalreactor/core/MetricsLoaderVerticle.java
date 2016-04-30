@@ -1,10 +1,12 @@
 package io.digitalreactor.core;
 
+import io.digitalreactor.core.api.RequestTable;
+import io.digitalreactor.core.api.YandexApi;
+import io.digitalreactor.core.api.YandexApiImpl;
 import io.digitalreactor.core.domain.MetricsLoader;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.http.HttpClient;
 
 /**
  * Created by ingvard on 07.04.16.
@@ -13,36 +15,37 @@ public class MetricsLoaderVerticle extends AbstractVerticle {
 
     public static final String LOAD_REPORT = "report.loader.load_report";
 
-    private static final String API_HOST = "api-metrika.yandex.ru";
-
-    private HttpClient httpClient;
     private MetricsLoader metricsLoader;
+
+    private EventBus eventBus;
+
+    private YandexApi yandexApi;
 
     @Override
     public void start() throws Exception {
-        EventBus eventBus = vertx.eventBus();
-        httpClient = vertx.createHttpClient();
-        metricsLoader = new MetricsLoader();
-
+        this.eventBus = vertx.eventBus();
+        this.metricsLoader = new MetricsLoader();
+        this.yandexApi = new YandexApiImpl(vertx, "");
         eventBus.consumer(LOAD_REPORT, this::loadReport);
     }
 
     private <T> void loadReport(Message<T> message) {
 
-      //  String requestURI = metricsLoader.resolveUri();
+        //todo map input message to normal request for yandex api
+        RequestTable requestTable = RequestTable.of()
+                .directClientLogins("directId1", "directId2")
+                .ids("id1", "id2", "id3")
+                .date1("fromDay")
+                .date2("toDay")
+                .dimensions("dimensions1")
+                .metrics("metrics1")
+                .offset(3)
+                .pretty(true)
+                .build();
 
-        //TODO[st.maxim] need to fix callback hell
-     /*   httpClient.get(443, API_HOST, requestURI, response -> {
-            if (response.statusCode() == 200) {
-                response.bodyHandler(responseBody -> {
-                    responseBody.toString("UTF-8");
-                });
-            }
-
-            //message.fail();
-            //TODO[st.maxim] errorHandler
-
-        });*/
+        yandexApi.tables(requestTable, result -> {
+            eventBus.publish("", result);
+        });
 
     }
 }
