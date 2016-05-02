@@ -3,10 +3,12 @@
  */
 
 var selectedCounter = null;
+var projectName = null;
 var buttonIsDisable = true;
 
 $(".project-select ul li").click(function () {
     selectedCounter = $(this).data("id");
+    projectName = $(this).data("name");
 
     $(".project-select ul li").removeClass("active");
     $(this).addClass("active");
@@ -19,7 +21,7 @@ $("#finish-button").click(function () {
     if (!buttonIsDisable) {
         buttonIsDisable = false;
 
-        $.post("/registration/finish", {counterId: selectedCounter})
+        $.post("/registration/finish", {counterId: selectedCounter, name: projectName})
             .done(function (data) {
                 $(".modal-window-padding").show("slow");
             });

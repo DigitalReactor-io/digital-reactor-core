@@ -1,11 +1,13 @@
 package io.digitalreactor.core.gateway.web;
 
+import io.digitalreactor.core.UserManagerVerticle;
 import io.digitalreactor.core.api.RequestCounterList;
 import io.digitalreactor.core.api.YandexApi;
 import io.digitalreactor.core.api.YandexApiImpl;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpMethod;
@@ -16,8 +18,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -29,15 +30,20 @@ public class RegistrationController {
     private Router router;
     private HandlebarsTemplateEngine engine;
     private HttpClient httpClient;
+    private EventBus eventBus;
 
     //TODO[St.Maxim] get from env
     private String APPLICATION_ID = "b26e324d5a134168b090b3f23e77a0e7";
     private String APPLICATION_AUTH = "Basic YjI2ZTMyNGQ1YTEzNDE2OGIwOTBiM2YyM2U3N2EwZTc6Yjk3MGJjMWIzOGI3NDE5YWEyN2Y4YjhjM2Q1ZDEzZTA=";
     private String CLIENT_SECRET = "b970bc1b38b7419aa27f8b8c3d5d13e0";
 
+    //TODO[St.Maxim] size limit
+    private Map<String, String> temporaryTokenStorage = new HashMap<>();
+
     public RegistrationController(Vertx vertx, HandlebarsTemplateEngine engine) {
         this.vertx = vertx;
         this.engine = engine;
+        this.eventBus = vertx.eventBus();
         this.httpClient = vertx.createHttpClient(new HttpClientOptions()
                 .setSsl(true)
                 .setTrustAll(true)
@@ -91,11 +97,15 @@ public class RegistrationController {
         String temporaryToken = "grant_type=authorization_code&code=" + code +
                 "&client_id=" + APPLICATION_ID + "&client_secret=" + CLIENT_SECRET;
 
-        //TODO[St.maxim] callback hell
+        //TODO[St.maxim] callback hell and test hell too:)
         httpClient.post(443, "oauth.yandex.ru", "/token", httpResponse -> {
             httpResponse.bodyHandler(bufferBody -> {
                 if (httpResponse.statusCode() == 200) {
                     String accessToken = bufferBody.toJsonObject().getString("access_token");
+
+                    String tokenCode = UUID.randomUUID().toString();
+                    routingContext.addCookie(Cookie.cookie("token", tokenCode).setMaxAge(1000).setHttpOnly(true));
+                    temporaryTokenStorage.put(tokenCode, accessToken);
 
                     YandexApi yandexApi = new YandexApiImpl(vertx, accessToken);
                     yandexApi.counters(RequestCounterList.of().build(), countersResponse -> {
@@ -130,6 +140,30 @@ public class RegistrationController {
     }
 
     private void finish(RoutingContext routingContext) {
-                routingContext.response().end();
+        String email = routingContext.getCookie("email").toString();
+        //TODO [St.Maxim] Need to remove the getting token && logger - null result
+        String token = temporaryTokenStorage.get(routingContext.getCookie("token").getValue());
+
+        routingContext.request().bodyHandler(bodyBuffer -> {
+            QueryStringDecoder qsd = new QueryStringDecoder(bodyBuffer.toString(), false);
+            String counterId = qsd.parameters().get("counterId").get(0);
+            String name = qsd.parameters().get("name").get(0);
+
+            //TODO[St.maxim] mb need more strict typesafe a object structure? Dto?
+            JsonObject createNewUserObj = new JsonObject()
+                    .put("email", email)
+                    .put("token", token)
+                    .put("counterId", counterId)
+                    .put("name", name);
+
+            eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, reply -> {
+                if (reply.succeeded()) {
+                    routingContext.response().setStatusCode(201).end();
+                } else {
+                    routingContext.response().setStatusCode(500).end();
+                }
+            });
+
+        });
     }
 }
