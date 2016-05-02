@@ -3,15 +3,21 @@ package io.digitalreactor.core.gateway.web;
 import io.digitalreactor.core.api.RequestCounterList;
 import io.digitalreactor.core.api.YandexApi;
 import io.digitalreactor.core.api.YandexApiImpl;
+import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -84,15 +90,36 @@ public class RegistrationController {
         String temporaryToken = "grant_type=authorization_code&code=" + code +
                 "&client_id=" + APPLICATION_ID + "&client_secret=" + CLIENT_SECRET;
 
+        //TODO[St.maxim] callback hell
         httpClient.post(443, "oauth.yandex.ru", "/token", httpResponse -> {
             httpResponse.bodyHandler(bufferBody -> {
                 if (httpResponse.statusCode() == 200) {
                     String accessToken = bufferBody.toJsonObject().getString("access_token");
 
-                   YandexApi yandexApi = new YandexApiImpl(vertx, accessToken);
-                    String json = yandexApi.counters(RequestCounterList.of().build());
+                    YandexApi yandexApi = new YandexApiImpl(vertx, accessToken);
+                    yandexApi.counters(RequestCounterList.of().build(), countersResponse -> {
+                        JsonArray counters = new JsonObject(countersResponse).getJsonArray("counters");
+                        List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
-                    //TODO[St.maxim] get counter list
+                        for (Object counter : counters) {
+                            Long id = ((JsonObject) counter).getLong("id");
+                            String name = ((JsonObject) counter).getString("name");
+
+                            countersDto.add(new CounterShortDto(id, name));
+                        }
+
+                        routingContext.put("counters", countersDto);
+
+                        engine.render(routingContext, "src/main/webapp/registration-step-3.hbs", res -> {
+                            if (res.succeeded()) {
+                                routingContext.response().end(res.result());
+                            } else {
+                                routingContext.fail(res.cause());
+                            }
+                        });
+
+                    });
+
                 }
             });
 
