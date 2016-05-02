@@ -8,7 +8,6 @@
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/animate.css">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/component.css" rel="stylesheet">
     <link href="/css/registration.css" rel="stylesheet">
@@ -21,39 +20,40 @@
 <body>
 
 
-<div class="registration-logo-padding">
-    <div class="registration-logo-padding-image">
-        <img src="/images/big-logo.png">
-    </div>
-    <div class="registration-logo-padding-name">
-        DigitalReactor
-    </div>
-</div>
+<div class="position-wrap">
 
-<div class="registration-padding">
-    <div class="registration-padding-step">
-        <div class="registration-padding-step-header">
-            <div class="registration-padding-step-header-b">
-                <div class="registration-padding-step-header-number">
-                    ШАГ 3 ИЗ 3
+    <div class="registration-logo-padding">
+        <div class="registration-logo-padding-image">
+            <img src="/images/big-logo.png">
+        </div>
+        <div class="registration-logo-padding-name">
+            DigitalReactor
+        </div>
+    </div>
+
+    <div class="registration-padding">
+        <div class="registration-padding-step">
+            <div class="registration-padding-step-header">
+                <div class="registration-padding-step-header-b">
+                    <div class="registration-padding-step-header-number">
+                        ШАГ 3 ИЗ 3
+                    </div>
+                    <div class="registration-padding-step-header-title">
+                        Создание проекта
+                    </div>
                 </div>
-                <div class="registration-padding-step-header-title">
-                    Создание проекта
-                </div>
+                <div class="registration-padding-step-header-delimiter"></div>
             </div>
-            <div class="registration-padding-step-header-delimiter"></div>
-        </div>
-        <div class="registration-padding-step-info">
-            Выберите сайт, который требуется проанализировать.
-        </div>
+            <div class="registration-padding-step-info">
+                Выберите сайт, который требуется проанализировать.
+            </div>
 
-        <form action="/" method="post">
 
             <div class="project-select-b">
                 <div class="project-select">
                     <ul>
                         {{#each counters}}
-                            <li>
+                            <li data-id="{{this.id}}">
                                 <div class="project-b">
                                     <div class="project-title">
                                         {{this.name}}
@@ -68,26 +68,46 @@
                 </div>
             </div>
 
-            <button class="registration-padding-step-button registration-button-position-3">Получить отчёт</button>
-        </form>
+            <button id="finish-button"
+                    class="registration-padding-step-button registration-button-position-3 registration-button-disable">
+                Получить отчёт
+            </button>
 
+
+        </div>
+        <div class="registration-padding-information">
+            <div class="registration-padding-information-title">
+                Дваигайся вперёд с нами!
+            </div>
+            <div class="registration-padding-information-description">
+                Пользователь - наша команда. Достигни лучших результатов вместе!
+            </div>
+
+            <div class="registration-padding-information-motivation">
+                <img src="/images/step-3-action.png">
+            </div>
+
+            <div class="registration-padding-information-arrow-b">
+                <img src="/images/step-3-bar.png">
+            </div>
+
+        </div>
     </div>
-    <div class="registration-padding-information">
-        <div class="registration-padding-information-title">
-            Дваигайся вперёд с нами!
-        </div>
-        <div class="registration-padding-information-description">
-            Пользователь - наша команда. Достигни лучших результатов вместе!
-        </div>
+</div>
 
-        <div class="registration-padding-information-motivation">
-            <img src="/images/step-3-action.png">
+<div class="modal-window-padding">
+    <div class="modal-window">
+        <div class="modal-window-header">
+            Регистрация успешно завершена
         </div>
-
-        <div class="registration-padding-information-arrow-b">
-            <img src="/images/step-3-bar.png">
+        <div class="modal-window-body">
+            Регистрация успешно завершена. На указанный Вами почтовый адрес выслан пароль.
+            <div class="modal-window-body-button">
+                <button class="registration-padding-step-button">
+                    <a href="/">Вернутся на сайт</a>
+                </button>
+            </div>
         </div>
-
     </div>
 </div>
 
@@ -96,5 +116,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/registration/choose.js"></script>
+
 </body>
 </html>

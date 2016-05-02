@@ -48,6 +48,7 @@ public class RegistrationController {
         router.route(HttpMethod.GET, "/").handler(this::registration);
         router.route(HttpMethod.POST, "/accessing").handler(this::accessing);
         router.route(HttpMethod.GET, "/choose").handler(this::chooseProject);
+        router.route(HttpMethod.POST, "/finish").handler(this::finish);
     }
 
     public Router router() {
@@ -126,5 +127,9 @@ public class RegistrationController {
             //TODO[St.maxim] 3DES for token
             //TODO[St.maxim] logger - error
         }).putHeader("Authorization", APPLICATION_AUTH).end(temporaryToken);
+    }
+
+    private void finish(RoutingContext routingContext) {
+                routingContext.response().end();
     }
 }
