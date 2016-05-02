@@ -75,6 +75,11 @@ header {
     transition: 1s ease-out 0.1s;;
 }
 
+.proposal-button a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
 .proposal-button:hover {
     background: rgba(232, 246, 255, 0.24);
     border: 1px solid #b9b9b9;

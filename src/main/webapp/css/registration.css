@@ -112,8 +112,17 @@ body {
     border: none;
 }
 
+.registration-padding-step-button a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
 .registration-input-position {
     margin-left: 50px;
+}
+
+.registration-button-disable {
+    background: rgba(72, 72, 72, 0.35);
 }
 
 .registration-button-position {
@@ -169,7 +178,7 @@ body {
     margin: 0 auto;
 }
 
-.project-select ul{
+.project-select ul {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -188,15 +197,54 @@ body {
 
 }
 
-
 .project-select li {
     padding: 5px 15px;
-    color:  #969696;
+    color: #969696;
 }
 
-.project-select li:hover {
+.project-select li:hover, .project-select ul .active {
     margin-left: -15px;
     color: #fff;
     background: #707070;
 }
+
+.position-wrap {
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+}
+
+.modal-window-padding {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #484848;
+    position: absolute;
+    z-index: 5;
+}
+
+.modal-window {
+    width: 40%;
+    margin: 10% auto;
+}
+
+.modal-window-header {
+    background: #707070;
+    height: 30px;
+    color: #ffffff;
+    font-size: 20px;
+    padding-left: 5px;
+}
+
+.modal-window-body {
+    padding: 5px;
+    background: #969696;
+    font-size: 18px;
+}
+
+.modal-window-body-button {
+    text-align: center;
+    margin: 10px;
+}
+
 

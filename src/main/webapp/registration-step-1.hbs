@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DigitalReactor.io - регистрация шаг 2</title>
+    <title>DigitalReactor.io - регистрация шаг 1</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/animate.css">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/component.css" rel="stylesheet">
-    <link href="css/registration.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/component.css" rel="stylesheet">
+    <link href="/css/registration.css" rel="stylesheet">
 
 
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -23,7 +23,7 @@
 
 <div class="registration-logo-padding">
     <div class="registration-logo-padding-image">
-        <img src="images/big-logo.png">
+        <img src="/images/big-logo.png">
     </div>
     <div class="registration-logo-padding-name">
         DigitalReactor
@@ -35,38 +35,38 @@
         <div class="registration-padding-step-header">
             <div class="registration-padding-step-header-b">
                 <div class="registration-padding-step-header-number">
-                    ШАГ 2 ИЗ 3
+                    ШАГ 1 ИЗ 3
                 </div>
                 <div class="registration-padding-step-header-title">
-                    Доступ к Яндекс.Метрике
+                    Регистрация в сервисе
                 </div>
             </div>
             <div class="registration-padding-step-header-delimiter"></div>
         </div>
-        <div class="registration-padding-step-info vertical_center">
-            Для подготовке аудита нам нужно получить доступ к вашему счетчику.
-            Данные не будут переданы третьим лицам.
+        <div class="registration-padding-step-info">
+            Введите свой почтовый адрес, который будет использоватся в качастве вашего логина для получения статистики.
         </div>
 
-        <form action="/" method="post">
+        <form action="/registration/accessing" method="post">
+            <input placeholder="Ваша почта" class="registration-padding-step-input registration-input-position" type="email" name="email">
             <button class="registration-padding-step-button registration-button-position">Далее</button>
         </form>
 
     </div>
     <div class="registration-padding-information">
         <div class="registration-padding-information-title">
-            Удобный инструмент залог продуктивной работы
+            Первый шаг на пути контроля показателей
         </div>
         <div class="registration-padding-information-description">
-            Команда DigitalReactor открыта предложениям и готова воплатить ваши мечты в жизнь.
+            Аналитика, хороший способ повыстить конкурентоспособность уменьшая затраты. На фоне конкурентов.
         </div>
 
         <div class="registration-padding-information-motivation">
-            <img src="images/step-2-action.png">
+            <img src="/images/step-1-action.png">
         </div>
 
         <div class="registration-padding-information-arrow-b">
-            <img src="images/we-can.png">
+            <img src="/images/people.png">
         </div>
 
     </div>
@@ -76,6 +76,6 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -15,8 +15,10 @@ public class App {
 
         WebServer restController = new WebServer();
         SummaryDispatcherVerticle summaryDispatcherVerticle = new SummaryDispatcherVerticle();
+        UserManagerVerticle userManagerVerticle = new UserManagerVerticle();
 
         vertx.deployVerticle(summaryDispatcherVerticle);
+        vertx.deployVerticle(userManagerVerticle);
         vertx.deployVerticle(restController, deploymentOptions);
     }
 }
