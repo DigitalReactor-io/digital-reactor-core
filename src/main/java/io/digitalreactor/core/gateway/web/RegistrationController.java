@@ -140,7 +140,7 @@ public class RegistrationController {
     }
 
     private void finish(RoutingContext routingContext) {
-        String email = routingContext.getCookie("email").toString();
+        String email = routingContext.getCookie("email").getValue();
         //TODO [St.Maxim] Need to remove the getting token && logger - null result
         String token = temporaryTokenStorage.get(routingContext.getCookie("token").getValue());
 
