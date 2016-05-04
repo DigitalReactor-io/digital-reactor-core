@@ -19,6 +19,7 @@ public class UserManagerVerticle extends AbstractVerticle {
 
     private final static String BASE_USER_MANAGER = "digitalreactor.core.user.";
     public final static String NEW_USER = BASE_USER_MANAGER + "new";
+    public final static String AUTHENTICATE = BASE_USER_MANAGER + "authenticate";
 
     private final String USER_TABLE = "users";
     private final String PROJECT_TABLE = "projects";
@@ -100,6 +101,10 @@ public class UserManagerVerticle extends AbstractVerticle {
                                 newUserMessage.fail(0, userInsertResult.cause().getMessage());
                             }
                         });
+
+                connection.close((closeRes) -> {
+                });
+
             } else {
                 newUserMessage.fail(0, res.cause().getMessage());
             }
