@@ -25,7 +25,7 @@ public class WebServer extends AbstractVerticle {
         router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
 
         //TODO[St.Maxim] Mb point to send, but not vertex
-        AuthProvider authProvider = new UserManagerAuthProvider(vertx);
+        AuthProvider authProvider = new UserManagerAuthProvider(vertx.eventBus(), UserManagerVerticle.AUTHENTICATE);
 
         router.route().handler(UserSessionHandler.create(authProvider));
 
@@ -33,7 +33,7 @@ public class WebServer extends AbstractVerticle {
 
         router.route("/logon").handler(FormLoginHandler.create(authProvider));
 
-         router.route("/logout").handler(context -> {
+        router.route("/logout").handler(context -> {
             context.clearUser();
             context.response().putHeader("location", "/").setStatusCode(302).end();
         });
@@ -44,6 +44,16 @@ public class WebServer extends AbstractVerticle {
         router.route("/images/*").handler(StaticHandler.create("src/main/webapp/images"));
 
         router.mountSubRouter("/registration/", new RegistrationController(vertx, engine).router());
+
+        router.route("/loginpage").handler(ctx -> {
+            engine.render(ctx, "src/main/webapp/loginpage.hbs", res -> {
+                if (res.succeeded()) {
+                    ctx.response().end(res.result());
+                } else {
+                    ctx.fail(res.cause());
+                }
+            });
+        });
 
         router.get().handler(ctx -> {
             engine.render(ctx, "src/main/webapp/index.hbs", res -> {
