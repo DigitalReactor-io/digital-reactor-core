@@ -55,6 +55,11 @@ header {
     text-align: center;
 }
 
+.button-sign-up a {
+    color: #fff;
+    text-decoration: none;
+}
+
 .proposal {
     margin-top: 50px;
     margin-bottom: 50px;

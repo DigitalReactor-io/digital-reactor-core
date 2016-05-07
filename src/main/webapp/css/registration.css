@@ -247,4 +247,23 @@ body {
     margin: 10px;
 }
 
+/**
+* Logon
+*/
+
+.logon-b {
+    background-color: #cccccc;
+    width: 600px;
+    height: 300px;
+    margin: 20px auto;
+}
+
+.logon {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.logon div {
+    margin-top: 20px;
+}
 
