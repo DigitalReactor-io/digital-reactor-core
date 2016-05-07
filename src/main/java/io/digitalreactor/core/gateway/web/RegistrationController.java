@@ -6,6 +6,7 @@ import io.digitalreactor.core.api.YandexApi;
 import io.digitalreactor.core.api.YandexApiImpl;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpClient;
@@ -72,23 +73,21 @@ public class RegistrationController {
     }
 
     private void accessing(RoutingContext routingContext) {
-        routingContext.request().bodyHandler(bodyBuffer -> {
-                    QueryStringDecoder qsd = new QueryStringDecoder(bodyBuffer.toString(), false);
-                    String email = qsd.parameters().get("email").get(0);
-                    routingContext.addCookie(Cookie.cookie("email", email).setMaxAge(1000).setHttpOnly(true));
+        MultiMap params = routingContext.request().formAttributes();
+        String email = params.get("email");
 
-                    routingContext.put("clientId", APPLICATION_ID);
+        routingContext.addCookie(Cookie.cookie("email", email).setMaxAge(1000).setHttpOnly(true));
+        routingContext.put("clientId", APPLICATION_ID);
 
-                    engine.render(routingContext, "src/main/webapp/registration-step-2.hbs", res -> {
-                        if (res.succeeded()) {
+        engine.render(routingContext, "src/main/webapp/registration-step-2.hbs", res -> {
+            if (res.succeeded()) {
 
-                            routingContext.response().end(res.result());
-                        } else {
-                            routingContext.fail(res.cause());
-                        }
-                    });
-                }
-        );
+                routingContext.response().end(res.result());
+            } else {
+                routingContext.fail(res.cause());
+            }
+        });
+
     }
 
     private void chooseProject(RoutingContext routingContext) {
@@ -140,30 +139,29 @@ public class RegistrationController {
     }
 
     private void finish(RoutingContext routingContext) {
+        MultiMap params = routingContext.request().formAttributes();
         String email = routingContext.getCookie("email").getValue();
         //TODO [St.Maxim] Need to remove the getting token && logger - null result
         String token = temporaryTokenStorage.get(routingContext.getCookie("token").getValue());
 
-        routingContext.request().bodyHandler(bodyBuffer -> {
-            QueryStringDecoder qsd = new QueryStringDecoder(bodyBuffer.toString(), false);
-            String counterId = qsd.parameters().get("counterId").get(0);
-            String name = qsd.parameters().get("name").get(0);
+        String counterId = params.get("counterId");
+        String name = params.get("name");
 
-            //TODO[St.maxim] mb need more strict typesafe a object structure? Dto?
-            JsonObject createNewUserObj = new JsonObject()
-                    .put("email", email)
-                    .put("token", token)
-                    .put("counterId", counterId)
-                    .put("name", name);
+        //TODO[St.maxim] mb need more strict typesafe a object structure? Dto?
+        JsonObject createNewUserObj = new JsonObject()
+                .put("email", email)
+                .put("token", token)
+                .put("counterId", counterId)
+                .put("name", name);
 
-            eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, reply -> {
-                if (reply.succeeded()) {
-                    routingContext.response().setStatusCode(201).end();
-                } else {
-                    routingContext.response().setStatusCode(500).end();
-                }
-            });
-
+        eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, reply -> {
+            if (reply.succeeded()) {
+                routingContext.response().setStatusCode(201).end();
+            } else {
+                routingContext.response().setStatusCode(500).end();
+            }
         });
+
+
     }
 }
