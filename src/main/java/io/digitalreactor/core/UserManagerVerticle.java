@@ -162,7 +162,7 @@ public class UserManagerVerticle extends AbstractVerticle {
 
                                         String passwordHash = passwordHash(password, salt);
 
-                                        if (storedPassword.equals(password)) {
+                                        if (storedPassword.equals(passwordHash)) {
                                             authInfo.reply("success");
                                         } else {
                                             authInfo.fail(404, "Invalid username/password");
