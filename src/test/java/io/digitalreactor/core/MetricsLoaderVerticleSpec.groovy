@@ -20,30 +20,4 @@ class MetricsLoaderVerticleSpec extends Specification {
         metricsLoaderVerticle = new MetricsLoaderVerticle()
         eventBusHandlers = new HashMap<>()
     }
-
-    //TODO[st.maxim] naming
-    def "happy path "() {
-        setup:
-        metricsLoaderVerticle.vertx = Mock(Vertx.class)
-
-        EventBus eventBus = Mock(EventBus.class)
-        metricsLoaderVerticle.vertx.eventBus() >> eventBus
-
-        HttpClient httpClient = Mock(HttpClient.class)
-        metricsLoaderVerticle.vertx.createHttpClient() >> httpClient
-
-        eventBus.consumer(_, _ as Handler<Message>) >> { address, handler ->
-            eventBusHandlers.put(address, handler)
-        }
-        metricsLoaderVerticle.start();
-        Message message = Mock(Message.class)
-        when:
-        eventBusHandlers.get(MetricsLoaderVerticle.LOAD_REPORT).handle(message)
-        then:
-        1 * httpClient.get(_, _, _, _)
-        //then:
-        //metricsLoaderVerticle.loadReport
-
-
-    }
 }

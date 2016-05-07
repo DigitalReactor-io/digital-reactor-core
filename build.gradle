@@ -1,9 +1,26 @@
 group 'io.digitalreactor'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-
 sourceCompatibility = 1.8
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'io.digitalreactor.core.App'
+
+run {
+    args = ["run", mainClassName]
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 
 repositories {
     mavenCentral()
