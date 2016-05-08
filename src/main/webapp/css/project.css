@@ -1,0 +1,121 @@
+.navbar-header img {
+    display: inline;
+    height: 30px;
+}
+
+.navbar-brand {
+    color: #fff;
+    font-size: 30px;
+}
+
+.project-show {
+    margin-top: 30px;
+    background: #dcdcdc;
+    width: 100%;
+    padding: 15px;
+    height: 200px;
+}
+
+.project-show-main {
+    height: 170px;
+    padding-top: 30px;
+    border-right: solid #a1a1a1 2px;
+}
+
+.project-show-main-name {
+    color: #a1a1a1;
+    font-size: 36px;
+    font-weight: 400;
+}
+
+.project-show-main-option {
+    color: #a1a1a1;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project-show-notification {
+    height: 170px;
+    border-right: solid #a1a1a1 2px;
+}
+
+.project-show-action-button {
+    height: 170px;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.project-show-action-button img {
+    display: inline;
+}
+
+.project-show-notification-title {
+    color: #838383;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project-show-notification-analyse-result ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.project-show-notification-analyse-result li {
+    margin-top: 10px;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project-show-notification-more a {
+    color: #838383;
+    font-size: 18px;
+    font-weight: 400;
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+}
+
+.project-show-notification-analyse-result img {
+    display: inline;
+}
+
+.project-fail-img {
+    padding-top: 20px;
+    display: inline;
+}
+
+.project-fail-message {
+    padding-top: 40px;
+    display: inline;
+    text-align: center;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project-show-notification-process {
+
+}
+
+.notification-process-complete-bar {
+    margin: 30px auto;
+    background: #b0b0b0;
+    height: 40px;
+    width: 400px;
+    padding: 5px;
+}
+
+.notification-process-complete-line {
+    background: #707070;
+    height: 30px;
+    width: 100px;
+}
+
+.notification-process-step {
+    text-align: center;
+    color: #838383;
+    font-size: 18px;
+    font-weight: 400;
+}
