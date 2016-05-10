@@ -1,12 +1,16 @@
 package io.digitalreactor.core.gateway.api;
 
 import io.digitalreactor.core.application.User;
+import io.digitalreactor.core.gateway.api.dto.ProjectDto;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.AsyncSQLClient;
 import io.vertx.ext.asyncsql.PostgreSQLClient;
 import io.vertx.ext.sql.SQLConnection;
+import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
@@ -17,6 +21,12 @@ import java.util.List;
  */
 public class ProjectController {
 
+    private final int PROJECT_ID_POSITION = 0;
+    private final int PROJECT_NAME_POSITION = 1;
+    private final int COUNTER_ID_POSITION = 2;
+    private final int LAST_UPDATE_POSITION = 3;
+
+    private Router router;
     private AsyncSQLClient postgreSQLClient;
 
     public ProjectController(Vertx vertx) {
@@ -29,15 +39,21 @@ public class ProjectController {
                 .put("database", "skdqqjmf");
 
         postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);
+        router = Router.router(vertx);
+
+        router.route(HttpMethod.GET, "/list").handler(this::projectList);
     }
 
+    public Router router() {
+        return router;
+    }
 
     private void projectList(RoutingContext routingContext) {
 
         //TODO[St.maxim] extract to independent vertical such as "Project vertical"
         int userId = ((User) routingContext.user()).id();
 
-        String SelectClientProjects = "SELECT project_name, counter_id, last_update FROM users AS u, accesses As a, projects AS p WHERE u.id = ? AND u.id = a.user_id AND a.id = p.access_id";
+        String SelectClientProjects = "SELECT p.id, project_name, counter_id, last_update FROM users AS u, accesses As a, projects AS p WHERE u.id = ? AND u.id = a.user_id AND a.id = p.access_id";
 
         postgreSQLClient.getConnection(res -> {
 
@@ -47,19 +63,18 @@ public class ProjectController {
                 connection.queryWithParams(SelectClientProjects, new JsonArray().add(userId), selectedClientProject -> {
                     if (selectedClientProject.succeeded()) {
                         List<JsonArray> results = selectedClientProject.result().getResults();
-
-                        List<JsonObject> projects = new ArrayList<JsonObject>();
+                        List<ProjectDto> projects = new ArrayList<ProjectDto>();
 
                         for (JsonArray project : results) {
-                            projects.add(new JsonObject()
-                                    .put("name", project.getString(0))
-                                    .put("counterId", project.getInteger(1))
-                                    .put("lastUpdate", project.getString(2))
-                            );
-
+                            projects.add(new ProjectDto(
+                                    project.getInteger(PROJECT_ID_POSITION),
+                                    project.getInteger(COUNTER_ID_POSITION),
+                                    project.getString(PROJECT_NAME_POSITION),
+                                    project.getString(LAST_UPDATE_POSITION)
+                            ));
                         }
 
-
+                        routingContext.response().end(Json.encode(projects));
                     } else {
                         routingContext.response().setStatusCode(500).end("connection problem");
                     }

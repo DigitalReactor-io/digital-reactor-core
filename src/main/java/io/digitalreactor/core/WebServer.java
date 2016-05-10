@@ -31,6 +31,7 @@ public class WebServer extends AbstractVerticle {
         router.route().handler(UserSessionHandler.create(authProvider));
 
         router.route("/project/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
+        router.route("/api/v1/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
 
         router.route("/logon").handler(FormLoginHandler.create(authProvider));
 
@@ -46,6 +47,8 @@ public class WebServer extends AbstractVerticle {
 
         router.mountSubRouter("/registration/", new RegistrationController(vertx, engine).router());
         router.mountSubRouter("/project/", new ProjectController(vertx, engine).router());
+
+        router.mountSubRouter("/api/v1/project/", new io.digitalreactor.core.gateway.api.ProjectController(vertx).router());
 
         router.route("/loginpage").handler(ctx -> {
             engine.render(ctx, "src/main/webapp/loginpage.hbs", res -> {
