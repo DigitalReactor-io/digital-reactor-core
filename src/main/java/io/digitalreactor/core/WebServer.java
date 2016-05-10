@@ -1,6 +1,7 @@
 package io.digitalreactor.core;
 
 import io.digitalreactor.core.application.UserManagerAuthProvider;
+import io.digitalreactor.core.gateway.api.ProjectApiController;
 import io.digitalreactor.core.gateway.web.ProjectController;
 import io.digitalreactor.core.gateway.web.RegistrationController;
 import io.vertx.core.AbstractVerticle;
@@ -44,11 +45,12 @@ public class WebServer extends AbstractVerticle {
         router.route("/fonts/*").handler(StaticHandler.create("src/main/webapp/fonts"));
         router.route("/css/*").handler(StaticHandler.create("src/main/webapp/css"));
         router.route("/images/*").handler(StaticHandler.create("src/main/webapp/images"));
+        router.route("/template/*").handler(StaticHandler.create("src/main/webapp/template"));
 
         router.mountSubRouter("/registration/", new RegistrationController(vertx, engine).router());
         router.mountSubRouter("/project/", new ProjectController(vertx, engine).router());
 
-        router.mountSubRouter("/api/v1/project/", new io.digitalreactor.core.gateway.api.ProjectController(vertx).router());
+        router.mountSubRouter("/api/v1/projects/", new ProjectApiController(vertx).router());
 
         router.route("/loginpage").handler(ctx -> {
             engine.render(ctx, "src/main/webapp/loginpage.hbs", res -> {

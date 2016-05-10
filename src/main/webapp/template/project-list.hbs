@@ -1,0 +1,29 @@
+{{#each projects}}
+    <div class="project-show">
+        <div class="project-show-main col-md-4">
+            <div class="project-show-main-name">{{name}}</div>
+            <div class="project-show-main-option">d: {{#if lastUpdate}}
+                {{lastUpdate}}
+            {{else}}
+                нет данных
+            {{/if}}</div>
+            <div class="project-show-main-option">c: {{counterId}}</div>
+        </div>
+        <div class="project-show-notification col-md-5">
+            <div class="project-show-notification-title">Результаты анализа</div>
+            <div class="project-show-notification-analyse-result">
+                <ul>
+                    <li><img src="/images/check.png"> Наблюдается рост конверсии</li>
+                    <li><img src="/images/check.png"> Необходимо добавить минус-слова</li>
+                    <li><img src="/images/uncheck.png"> Переходы на нерелевантные страницы</li>
+                </ul>
+            </div>
+            <div class="project-show-notification-more">
+                <a href="">Подробный отчёт</a>
+            </div>
+        </div>
+        <div class="project-show-action-button col-md-3">
+            <img src="/images/action-update.png">
+        </div>
+    </div>
+{{/each}}

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by ingvard on 06.04.16.
  */
-public class ProjectController {
+public class ProjectApiController {
 
     private final int PROJECT_ID_POSITION = 0;
     private final int PROJECT_NAME_POSITION = 1;
@@ -29,7 +29,7 @@ public class ProjectController {
     private Router router;
     private AsyncSQLClient postgreSQLClient;
 
-    public ProjectController(Vertx vertx) {
+    public ProjectApiController(Vertx vertx) {
         //TODO[St.maxim] to env
         JsonObject postgreSQLClientConfig = new JsonObject()
                 .put("host", "horton.elephantsql.com")
@@ -41,7 +41,7 @@ public class ProjectController {
         postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);
         router = Router.router(vertx);
 
-        router.route(HttpMethod.GET, "/list").handler(this::projectList);
+        router.route(HttpMethod.GET, "/").handler(this::projectList);
     }
 
     public Router router() {
