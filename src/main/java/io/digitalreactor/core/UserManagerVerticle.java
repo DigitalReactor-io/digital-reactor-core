@@ -42,6 +42,8 @@ public class UserManagerVerticle extends AbstractVerticle {
 
     private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
 
+    private final int ID_POSITION_IN_TABLE = 0;
+    private final int EMAIL_POSITION_IN_TABLE = 1;
     private final int PASSWORD_POSITION_IN_TABLE = 2;
 
     //TODO[St.maxim] to env
@@ -157,13 +159,15 @@ public class UserManagerVerticle extends AbstractVerticle {
                                         break;
                                     case 1:
                                         JsonArray userRow = (JsonArray) result.getResults().get(0);
-                                        //TODO[St.maxim] hash + salt
                                         String storedPassword = userRow.getString(PASSWORD_POSITION_IN_TABLE);
 
                                         String passwordHash = passwordHash(password, salt);
 
                                         if (storedPassword.equals(passwordHash)) {
-                                            authInfo.reply("success");
+                                            authInfo.reply(new JsonObject()
+                                                    .put("id", userRow.getInteger(ID_POSITION_IN_TABLE))
+                                                    .put("email", userRow.getString(EMAIL_POSITION_IN_TABLE))
+                                            );
                                         } else {
                                             authInfo.fail(404, "Invalid username/password");
                                         }
