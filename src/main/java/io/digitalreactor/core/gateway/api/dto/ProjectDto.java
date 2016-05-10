@@ -5,7 +5,7 @@ package io.digitalreactor.core.gateway.api.dto;
  */
 public class ProjectDto {
     private int id;
+    private int counterId;
     private String name;
-    private String url;
     private String lastUpdate;
 }
