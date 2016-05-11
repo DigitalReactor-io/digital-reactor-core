@@ -1,10 +1,12 @@
 package io.digitalreactor.core.domain;
 
+import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.domain.messages.CreateSummaryMessage;
 import io.digitalreactor.core.domain.publishers.SummaryDispatcherPublisher;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ingvard on 07.04.16.
@@ -12,7 +14,8 @@ import java.util.List;
 public class SummaryDispatcher {
 
     private class SummaryCheckList {
-        private HashMap<ReportTypeEnum, Boolean> checkList = new HashMap<>();
+        private Map<ReportTypeEnum, String> reports = new HashMap<>();
+        private Map<ReportTypeEnum, Boolean> checkList = new HashMap<>();
         private List<String> callbackAddresses;
 
         public SummaryCheckList(List<ReportTypeEnum> necessaryReports, List<String> callbackAddresses) {
@@ -20,6 +23,10 @@ public class SummaryDispatcher {
             for (ReportTypeEnum report : necessaryReports) {
                 checkList.put(report, false);
             }
+        }
+
+        public void addReport(ReportTypeEnum type, String report) {
+            reports.put(type, report);
         }
 
         public void markAsSuccess(ReportTypeEnum report) {
@@ -43,7 +50,6 @@ public class SummaryDispatcher {
     }
 
     public void createSummary(CreateSummaryMessage summary) {
-
         if (summary.necessaryReports.isEmpty()) {
             throw new IllegalStateException("The summary must have at least one report.");
         }
@@ -58,14 +64,16 @@ public class SummaryDispatcher {
         );
     }
 
-    public void enrichSummary(String summaryId, ReportTypeEnum successReport) {
-        //TODO[st.maxim] тут могут быть проблемы при многопоточном доступе
-        SummaryCheckList summaryCheckList = summaryStateStorage.get(summaryId);
-        summaryCheckList.markAsSuccess(successReport);
-        summaryStateStorage.put(summaryId, summaryCheckList);
+    public void enrichSummary(ReportMessage reportMessage) {
+        SummaryCheckList summaryCheckList = summaryStateStorage.get(reportMessage.summaryId);
+        summaryCheckList.addReport(reportMessage.reportType, reportMessage.report);
+        summaryCheckList.markAsSuccess(reportMessage.reportType);
 
         if (summaryCheckList.isReady()) {
-            summaryDispatcherPublisher.summaryWasCreated(summaryId, summaryCheckList.getCallbackAddresses());
+            summaryDispatcherPublisher.summaryWasCreated(
+                    reportMessage.summaryId,
+                    summaryCheckList.getCallbackAddresses())
+            ;
         }
     }
 }

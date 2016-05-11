@@ -1,19 +1,13 @@
-package io.digitalreactor.core.api;
+package io.digitalreactor.core.api.yandex;
 
-import io.digitalreactor.core.api.counter.Status;
-import io.digitalreactor.core.api.counter.Type;
+import io.digitalreactor.core.api.yandex.counter.Status;
+import io.digitalreactor.core.api.yandex.counter.Type;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 /**
  * Created by flaidzeres on 30.04.16.
  */
 public class RequestCounterList implements Request {
-
     private Boolean favorite;
     private String field;
     private Integer labelId;

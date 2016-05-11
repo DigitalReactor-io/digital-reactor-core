@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api.counter;
+package io.digitalreactor.core.api.yandex.counter;
 
 /**
  * Created by flaidzeres on 30.04.16.

@@ -1,9 +1,9 @@
 package io.digitalreactor.core;
 
-import io.digitalreactor.core.api.RequestCounterList;
-import io.digitalreactor.core.api.RequestTable;
-import io.digitalreactor.core.api.YandexApi;
-import io.digitalreactor.core.api.YandexApiImpl;
+import io.digitalreactor.core.api.yandex.RequestCounterList;
+import io.digitalreactor.core.api.yandex.RequestTable;
+import io.digitalreactor.core.api.yandex.YandexApi;
+import io.digitalreactor.core.api.yandex.YandexApiImpl;
 import io.vertx.core.Vertx;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -19,7 +19,9 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class YandexApiTest {
 
-    private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx(), "ARRC9_4AAr_pqwmAhZwJQMWm2OAqi47ewg");
+    private String token = "ARRC9_4AAr_pqwmAhZwJQMWm2OAqi47ewg";
+
+    private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx());
 
     @Test
     public void tables_async(TestContext context) {
@@ -31,7 +33,7 @@ public class YandexApiTest {
                 .pretty(true)
                 .build();
 
-        yandexApi.tables(requestTable, result -> {
+        yandexApi.tables(requestTable, token, result -> {
             Assert.assertTrue(StringUtils.isNotEmpty(result));
             System.out.println(result);
             async.complete();
@@ -46,7 +48,7 @@ public class YandexApiTest {
                 .pretty(true)
                 .build();
 
-        String result = yandexApi.tables(requestTable);
+        String result = yandexApi.tables(requestTable, token);
 
         Assert.assertTrue(StringUtils.isNotEmpty(result));
 
@@ -57,7 +59,7 @@ public class YandexApiTest {
     public void get_counters_list_async(TestContext context) {
         Async async = context.async();
 
-        yandexApi.counters(RequestCounterList.of().build(), result -> {
+        yandexApi.counters(RequestCounterList.of().build(), token, result -> {
             Assert.assertTrue(StringUtils.isNotEmpty(result));
             System.out.println(result);
             async.complete();
@@ -66,7 +68,7 @@ public class YandexApiTest {
 
     @Test
     public void get_counters_list_blocking() {
-        String result = yandexApi.counters(RequestCounterList.of().build());
+        String result = yandexApi.counters(RequestCounterList.of().build(), token);
 
         Assert.assertTrue(StringUtils.isNotEmpty(result));
 

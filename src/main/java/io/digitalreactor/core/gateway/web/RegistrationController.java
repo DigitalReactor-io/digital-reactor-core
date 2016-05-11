@@ -1,11 +1,10 @@
 package io.digitalreactor.core.gateway.web;
 
 import io.digitalreactor.core.UserManagerVerticle;
-import io.digitalreactor.core.api.RequestCounterList;
-import io.digitalreactor.core.api.YandexApi;
-import io.digitalreactor.core.api.YandexApiImpl;
+import io.digitalreactor.core.api.yandex.RequestCounterList;
+import io.digitalreactor.core.api.yandex.YandexApi;
+import io.digitalreactor.core.api.yandex.YandexApiImpl;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -106,8 +105,8 @@ public class RegistrationController {
                     routingContext.addCookie(Cookie.cookie("token", tokenCode).setMaxAge(1000).setHttpOnly(true));
                     temporaryTokenStorage.put(tokenCode, accessToken);
 
-                    YandexApi yandexApi = new YandexApiImpl(vertx, accessToken);
-                    yandexApi.counters(RequestCounterList.of().build(), countersResponse -> {
+                    YandexApi yandexApi = new YandexApiImpl(vertx);
+                    yandexApi.counters(RequestCounterList.of().build(), accessToken, countersResponse -> {
                         JsonArray counters = new JsonObject(countersResponse).getJsonArray("counters");
                         List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
