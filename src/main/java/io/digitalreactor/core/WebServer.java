@@ -41,11 +41,11 @@ public class WebServer extends AbstractVerticle {
             context.response().putHeader("location", "/").setStatusCode(302).end();
         });
 
-        router.route("/js/*").handler(StaticHandler.create("src/main/webapp/js"));
+        router.route("/js/*").handler(StaticHandler.create("src/main/webapp/js").setCachingEnabled(false));
         router.route("/fonts/*").handler(StaticHandler.create("src/main/webapp/fonts"));
-        router.route("/css/*").handler(StaticHandler.create("src/main/webapp/css"));
+        router.route("/css/*").handler(StaticHandler.create("src/main/webapp/css").setCachingEnabled(false));
         router.route("/images/*").handler(StaticHandler.create("src/main/webapp/images"));
-        router.route("/template/*").handler(StaticHandler.create("src/main/webapp/template"));
+        router.route("/template/*").handler(StaticHandler.create("src/main/webapp/template").setCachingEnabled(false));
 
         router.mountSubRouter("/registration/", new RegistrationController(vertx, engine).router());
         router.mountSubRouter("/project/", new ProjectController(vertx, engine).router());

@@ -1,0 +1,36 @@
+
+<style>
+    body, html {
+        margin: 0;
+    }
+
+    .report {
+        margin-top: 30px;
+        background: #dcdcdc;
+        width: 100%;
+        padding-top: 10px;
+        height: 350px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="report-block">
+    <div class="report report-visits-during-month">
+        <div class="report-graphic-block">
+            <div class="col-md-8 report-graphic-space">
+                <div id="columnchart_values" style="height: 300px;"></div>
+                {{chart}}
+            </div>
+            <div class="col-md-4 report-graphic-description">
+                <div class="report-h3">За последнюю неделю:</div>
+                <div class="report-graphic-description-text">{{description}}</div>
+            </div>
+        </div>
+        <div class="report-reason-block">
+            <div class="col-md-12 report-reason">
+                <div class="report-h4">Комментарий:</div>
+                <div class="report-reason-text">{{reason}}</div>
+            </div>
+        </div>
+    </div>
+</div>

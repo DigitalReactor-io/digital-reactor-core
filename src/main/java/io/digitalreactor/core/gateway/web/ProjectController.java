@@ -32,10 +32,21 @@ public class ProjectController {
         router = Router.router(vertx);
 
         router.route(HttpMethod.GET, "/").handler(this::projectList);
+        router.route(HttpMethod.GET, "/:id/").handler(this::project);
     }
 
     public Router router() {
         return router;
+    }
+
+    private void project(RoutingContext routingContext) {
+        engine.render(routingContext, "src/main/webapp/project.hbs", res -> {
+            if (res.succeeded()) {
+                routingContext.response().end(res.result());
+            } else {
+                routingContext.fail(res.cause());
+            }
+        });
     }
 
     private void projectList(RoutingContext routingContext) {

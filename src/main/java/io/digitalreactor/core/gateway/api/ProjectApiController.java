@@ -1,7 +1,10 @@
 package io.digitalreactor.core.gateway.api;
 
 import io.digitalreactor.core.application.User;
+import io.digitalreactor.core.gateway.api.dto.ActionEnum;
 import io.digitalreactor.core.gateway.api.dto.ProjectDto;
+import io.digitalreactor.core.gateway.api.dto.SummaryDto;
+import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -13,7 +16,9 @@ import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,10 +47,27 @@ public class ProjectApiController {
         router = Router.router(vertx);
 
         router.route(HttpMethod.GET, "/").handler(this::projectList);
+        //TODO[St.maxim] implementation
+        router.route(HttpMethod.GET, "/:id/summary/").handler(this::projectList);
+        //TODO[St.maxim] implementation
+        router.route(HttpMethod.GET, "/:id/summary/actual").handler(this::actualSummary);
     }
 
     public Router router() {
         return router;
+    }
+
+    private void actualSummary(RoutingContext routingContext) {
+
+        List<Integer> visits = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
+
+        VisitsDuringMonthReportDto visitReport = new VisitsDuringMonthReportDto(40, 40, ActionEnum.DECREASING, VisitsDuringMonthReportDto.visitsListWithDay(visits, LocalDate.now()), "some reason");
+
+        List<Object> v = new ArrayList<Object>();
+        v.add(visitReport);
+
+
+        routingContext.response().end(Json.encode(new SummaryDto(v)));
     }
 
     private void projectList(RoutingContext routingContext) {
