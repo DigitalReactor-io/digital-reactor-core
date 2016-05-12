@@ -5,5 +5,6 @@ package io.digitalreactor.core.domain;
  */
 public enum ReportTypeEnum {
     VISITS_DURING_MONTH,
-    REFERRING_SOURCE
+    REFERRING_SOURCE,
+    SEARCH_PHRASE_YANDEX_DIRECT
 }

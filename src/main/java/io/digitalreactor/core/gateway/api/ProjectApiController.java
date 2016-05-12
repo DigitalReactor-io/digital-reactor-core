@@ -1,10 +1,7 @@
 package io.digitalreactor.core.gateway.api;
 
 import io.digitalreactor.core.application.User;
-import io.digitalreactor.core.gateway.api.dto.ActionEnum;
-import io.digitalreactor.core.gateway.api.dto.ProjectDto;
-import io.digitalreactor.core.gateway.api.dto.SummaryDto;
-import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
+import io.digitalreactor.core.gateway.api.dto.*;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -17,6 +14,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,10 +59,57 @@ public class ProjectApiController {
 
         List<Integer> visits = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
 
-        VisitsDuringMonthReportDto visitReport = new VisitsDuringMonthReportDto(40, 40, ActionEnum.DECREASING, VisitsDuringMonthReportDto.visitsListWithDay(visits, LocalDate.now()), "some reason");
+        List<VisitDto> visitDtos = VisitsDuringMonthReportDto.visitsListWithDay(visits, LocalDate.now());
+
+        VisitsDuringMonthReportDto visitReport = new VisitsDuringMonthReportDto(40, 40, ActionEnum.DECREASING, visitDtos, "some reason");
+
+
+        SearchPhraseDto searchPhrase = new SearchPhraseDto(
+                "test",
+                12,
+                12.3,
+                23.2,
+                LocalTime.now(),
+                12.1
+        );
+        SearchPhraseYandexDirectDto searchPhrases = new SearchPhraseYandexDirectDto(
+                "reason",
+                new ArrayList<>(Arrays.asList(searchPhrase, searchPhrase, searchPhrase)),
+                new ArrayList<>(Arrays.asList(searchPhrase, searchPhrase, searchPhrase))
+        );
+
+        ReferringSourceReportDto referringSourceReport = new ReferringSourceReportDto(
+                new ArrayList<ReferringSourceDto>(Arrays.asList(
+                        new ReferringSourceDto(
+                                "test1",
+                                11,
+                                11,
+                                11,
+                                11,
+                                1,
+                                1,
+                                visitDtos
+                        ),
+                        new ReferringSourceDto(
+                                "test2",
+                                11,
+                                11,
+                                11,
+                                11,
+                                1,
+                                1,
+                                visitDtos
+                        )
+                )),
+                30,
+                22.2,
+                22.22
+        );
 
         List<Object> v = new ArrayList<Object>();
         v.add(visitReport);
+        v.add(referringSourceReport);
+        v.add(searchPhrases);
 
 
         routingContext.response().end(Json.encode(new SummaryDto(v)));
