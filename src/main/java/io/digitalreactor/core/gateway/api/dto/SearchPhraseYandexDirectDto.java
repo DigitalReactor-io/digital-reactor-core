@@ -8,7 +8,7 @@ import java.util.List;
  * Created by MStepachev on 12.05.2016.
  */
 public class SearchPhraseYandexDirectDto {
-    private ReportTypeEnum typeEnum = ReportTypeEnum.SEARCH_PHRASE_YANDEX_DIRECT;
+    private ReportTypeEnum type = ReportTypeEnum.SEARCH_PHRASE_YANDEX_DIRECT;
     private String reason;
     private List<SearchPhraseDto> successPhrases;
     private List<SearchPhraseDto> failurePhrases;
@@ -19,8 +19,8 @@ public class SearchPhraseYandexDirectDto {
         this.failurePhrases = failurePhrases;
     }
 
-    public ReportTypeEnum getTypeEnum() {
-        return typeEnum;
+    public ReportTypeEnum getType() {
+        return type;
     }
 
     public String getReason() {

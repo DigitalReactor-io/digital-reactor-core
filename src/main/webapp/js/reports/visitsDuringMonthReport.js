@@ -7,7 +7,7 @@ function VisitsDuringMonthReport(details, templateHbs) {
     var template = Handlebars.compile(templateHbs);
 
     function chart() {
-        google.charts.load("current", {packages: ['corechart']});
+
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             var ar = [["Element", "Density", {role: "style"}]];
@@ -33,6 +33,7 @@ function VisitsDuringMonthReport(details, templateHbs) {
                 2]);
 
             var options = {
+                interpolateNulls: true,
                 title: "Визиты за 30 дней",
                 width: 900,
                 height: 300,
@@ -46,7 +47,20 @@ function VisitsDuringMonthReport(details, templateHbs) {
     }
 
     function description() {
-        return 'description';
+        switch (details.action) {
+            case 'INCREASING':
+            {
+                return "Посещаемость увеличилась на "+details.percent+"% ("+details.visit+" визитов)."
+            }
+            case 'DECREASING':
+            {
+                return "Посещаемость уменьшилась на "+details.percent+"% ("+details.visit+" визитов)."
+            }
+            case 'UNALTERED':
+            {
+                return "Посещаемость не изменилась: "+details.visit+" визитов."
+            }
+        }
     }
 
     function reason() {
