@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api;
+package io.digitalreactor.core.api.yandex;
 
 /**
  * Created by flaidzeres on 30.04.16.

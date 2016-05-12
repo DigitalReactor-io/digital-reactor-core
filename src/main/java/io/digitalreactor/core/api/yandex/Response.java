@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api;
+package io.digitalreactor.core.api.yandex;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

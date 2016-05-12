@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api;
+package io.digitalreactor.core.api.yandex;
 
 import org.apache.commons.lang3.StringUtils;
 

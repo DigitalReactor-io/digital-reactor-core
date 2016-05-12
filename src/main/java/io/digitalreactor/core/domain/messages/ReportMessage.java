@@ -5,7 +5,7 @@ import io.digitalreactor.core.domain.ReportTypeEnum;
 /**
  * Created by ingvard on 07.04.16.
  */
-public class CreateReportMessage {
+public class ReportMessage {
     public String summaryId;
     public String clientToken;
     public String counterId;
@@ -14,6 +14,6 @@ public class CreateReportMessage {
     public String report;
 
     public String json() {
-        return "";
+        return raw;
     }
 }
