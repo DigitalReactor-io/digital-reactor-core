@@ -119,3 +119,20 @@
     font-size: 18px;
     font-weight: 400;
 }
+
+/**
+* report
+*/
+
+.report {
+    margin-top: 30px;
+    background: #dcdcdc;
+    width: 100%;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.report-title {
+    margin-left: 15px;
+    font-size: 28px;
+}

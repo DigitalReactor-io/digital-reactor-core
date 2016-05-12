@@ -61,7 +61,7 @@ public class ProjectApiController {
 
         List<VisitDto> visitDtos = VisitsDuringMonthReportDto.visitsListWithDay(visits, LocalDate.now());
 
-        VisitsDuringMonthReportDto visitReport = new VisitsDuringMonthReportDto(40, 40, ActionEnum.DECREASING, visitDtos, "some reason");
+        VisitsDuringMonthReportDto visitReport = new VisitsDuringMonthReportDto(40, 40, ActionEnum.DECREASING, visitDtos, "На посещаемость может влиять сезонность, отключение рекламного канала или снижение видимости  сайта в поисковой выдачи.");
 
 
         SearchPhraseDto searchPhrase = new SearchPhraseDto(
@@ -73,7 +73,7 @@ public class ProjectApiController {
                 12.1
         );
         SearchPhraseYandexDirectDto searchPhrases = new SearchPhraseYandexDirectDto(
-                "reason",
+                "Рекомендуем проверить запросы из списка \"Неуспешные поисковые фразы\". Существует несколько причин низких показателей рекламы: нецелевые запросы, нецелевые рекламные объявления, недостаточно качественное изложение торгового предложения на посадочной странице.",
                 new ArrayList<>(Arrays.asList(searchPhrase, searchPhrase, searchPhrase)),
                 new ArrayList<>(Arrays.asList(searchPhrase, searchPhrase, searchPhrase))
         );
@@ -103,7 +103,8 @@ public class ProjectApiController {
                 )),
                 30,
                 22.2,
-                22.22
+                22.22,
+                ActionEnum.DECREASING
         );
 
         List<Object> v = new ArrayList<Object>();

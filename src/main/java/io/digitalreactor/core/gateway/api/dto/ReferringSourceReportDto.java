@@ -13,12 +13,18 @@ public class ReferringSourceReportDto {
     private int totalGoals;
     private double totalConversion;
     private double totalConversionChange;
+    private ActionEnum action;
 
-    public ReferringSourceReportDto(List<ReferringSourceDto> sources, int totalGoals, double totalConversion, double totalConversionChange) {
+    public ReferringSourceReportDto(List<ReferringSourceDto> sources, int totalGoals, double totalConversion, double totalConversionChange, ActionEnum action) {
         this.sources = sources;
         this.totalGoals = totalGoals;
         this.totalConversion = totalConversion;
         this.totalConversionChange = totalConversionChange;
+        this.action = action;
+    }
+
+    public ActionEnum getAction() {
+        return action;
     }
 
     public ReportTypeEnum getType() {

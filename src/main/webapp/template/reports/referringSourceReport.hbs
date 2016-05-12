@@ -1,0 +1,50 @@
+<div class="report-block">
+    <div class="report">
+        <div class="report-title">
+            Источники переходов на сайт
+        </div>
+        <div class="report-graphic-block">
+            <div class="col-md-8 report-graphic-space">
+                <div id="referring-source-chart" style="height: 300px;"></div>
+            </div>
+            <div class="col-md-4 report-graphic-description">
+                <div class="report-h3">За последнюю неделю:</div>
+                <div class="report-graphic-description-text">
+                    <div>
+                        {{description}}
+                    </div>
+                    <div>
+                        Количество достигнутых целей: {{goals}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row report-reason-block">
+            <div class="col-md-12">
+                <div class="report-section">
+                    Конверсия по источникам трафика за последнюю неделю
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Источник</th>
+                        <th>Визиты</th>
+                        <th>Целевые визиты</th>
+                        <th>Конверсия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each sources}}
+                        <tr>
+                            <th scope="row">{{this.name}}</th>
+                            <td>{{this.visit}} ({{this.visitChange}})</td>
+                            <td>{{this.goals}} ({{this.goalsChange}})</td>
+                            <td>{{this.conversion}} ({{this.conversionChange}})</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

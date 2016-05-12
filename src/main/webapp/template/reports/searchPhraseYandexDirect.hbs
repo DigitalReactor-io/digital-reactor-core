@@ -1,0 +1,78 @@
+<div class="report-block">
+    <div class="report">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="report-title">Поисковые фразы Яндекс Директа</div>
+                <div class="report-description">Отчет позволяет определить конверсионные фразы, а так же фразы, перейдя по которыйм пользователи не
+                    выполняли конверсий и уходили с сайта.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="report-section">
+                    Успешные поисковые фразы
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Поисковая фраза</th>
+                        <th>Визиты</th>
+                        <th>Отказы</th>
+                        <th>Глубина просмотра</th>
+                        <th>Время на сайте</th>
+                        <th>Конверсия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each successPhrases}}
+                        <tr>
+                            <th scope="row">{{this.phrase}}</th>
+                            <td>{{this.visit}}</td>
+                            <td>{{this.refusals}}</td>
+                            <td>{{this.viewDepth}}</td>
+                            <td>{{this.timeOnSite.hour}}:{{this.timeOnSite.minute}}:{{this.timeOnSite.second}}</td>
+                            <td>{{this.conversion}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+                <div class="report-section">
+                    Неуспешные поисковые фразы
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Поисковая фраза</th>
+                        <th>Визиты</th>
+                        <th>Отказы</th>
+                        <th>Глубина просмотра</th>
+                        <th>Время на сайте</th>
+                        <th>Конверсия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each failurePhrases}}
+                        <tr>
+                            <th scope="row">{{this.phrase}}</th>
+                            <td>{{this.visit}}</td>
+                            <td>{{this.refusals}}</td>
+                            <td>{{this.viewDepth}}</td>
+                            <td>{{this.timeOnSite.hour}}:{{this.timeOnSite.minute}}:{{this.timeOnSite.second}}</td>
+                            <td>{{this.conversion}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+                <div class="report-section">
+                    Комментарий:
+                </div>
+                <div class="report-reason">
+                    {{reason}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

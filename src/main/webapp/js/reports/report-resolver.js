@@ -3,6 +3,8 @@
  */
 
 function ReportResolver() {
+    google.charts.load('current', {'packages':['line', 'corechart']});
+    
     return {
         resolve: function (reportRow, bindTo) {
             if (reportRow.type) {
@@ -14,6 +16,23 @@ function ReportResolver() {
                             var report = new VisitsDuringMonthReport(reportRow, source);
                             $(bindTo).append(report.render());
                         });
+                        break;
+                    }
+                    case 'REFERRING_SOURCE':
+                    {
+                        $.get('/template/reports/referringSourceReport.hbs', function (source) {
+                            var report = new ReferringSourceReport(reportRow, source);
+                            $(bindTo).append(report.render());
+                        });
+                        break;
+                    }
+                    case 'SEARCH_PHRASE_YANDEX_DIRECT':
+                    {
+                        $.get('/template/reports/searchPhraseYandexDirect.hbs', function (source) {
+                            var report = new SearchPhraseYandexDirect(reportRow, source);
+                            $(bindTo).append(report.render());
+                        });
+                        break;
                     }
                 }
             } else {
