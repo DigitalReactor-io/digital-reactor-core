@@ -3,8 +3,6 @@ package io.digitalreactor.core;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 
-import java.util.UUID;
-
 /**
  * Created by ingvard on 03.04.16.
  */
@@ -16,7 +14,7 @@ public class App {
         WebServer restController = new WebServer();
         SummaryDispatcherVerticle summaryDispatcherVerticle = new SummaryDispatcherVerticle();
         UserManagerVerticle userManagerVerticle = new UserManagerVerticle();
-        SummeryStorageVerticle summeryStorageVerticle = new SummeryStorageVerticle();
+        SummaryStorageVerticle summeryStorageVerticle = new SummaryStorageVerticle();
         ProjectManagerVerticle projectManagerVerticle = new ProjectManagerVerticle();
 
         vertx.deployVerticle(projectManagerVerticle);

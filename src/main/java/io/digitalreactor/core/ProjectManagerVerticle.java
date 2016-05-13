@@ -18,6 +18,8 @@ public class ProjectManagerVerticle extends AbstractVerticle {
     public final static String NEW_PROJECT = BASE_USER_MANAGER + "new";
     public final static String MARK_AS_COMPLETED = BASE_USER_MANAGER + "completed";
     public final static String MARK_AS_LOADING = BASE_USER_MANAGER + "loading";
+    public final static String GET_BY_ID = BASE_USER_MANAGER + "get_by_id";
+
 
     private MongoClient client;
     private String PROJECTS_COLLECTION = "projects";
@@ -36,7 +38,22 @@ public class ProjectManagerVerticle extends AbstractVerticle {
         vertx.eventBus().consumer(NEW_PROJECT, this::createNewProject);
         vertx.eventBus().consumer(MARK_AS_LOADING, this::markAsLoadingSummary);
         vertx.eventBus().consumer(MARK_AS_COMPLETED, this::markSummaryAsCompleted);
+        vertx.eventBus().consumer(GET_BY_ID, this::getById);
 
+    }
+
+    private void getById(Message message) {
+        int projectId = Integer.valueOf(((JsonObject)message.body()).getString("id"));
+
+        client.find(PROJECTS_COLLECTION, new JsonObject().put("_id", projectId), res -> {
+            if (res.succeeded()) {
+                JsonObject summary = res.result().get(0);
+
+                message.reply(summary);
+            } else {
+                res.cause().printStackTrace();
+            }
+        });
     }
 
     private void markSummaryAsCompleted(Message message) {
