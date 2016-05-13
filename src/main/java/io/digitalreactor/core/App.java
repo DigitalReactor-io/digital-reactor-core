@@ -16,7 +16,11 @@ public class App {
         WebServer restController = new WebServer();
         SummaryDispatcherVerticle summaryDispatcherVerticle = new SummaryDispatcherVerticle();
         UserManagerVerticle userManagerVerticle = new UserManagerVerticle();
+        SummeryStorageVerticle summeryStorageVerticle = new SummeryStorageVerticle();
+        ProjectManagerVerticle projectManagerVerticle = new ProjectManagerVerticle();
 
+        vertx.deployVerticle(projectManagerVerticle);
+        vertx.deployVerticle(summeryStorageVerticle);
         vertx.deployVerticle(summaryDispatcherVerticle);
         vertx.deployVerticle(userManagerVerticle);
         vertx.deployVerticle(restController, deploymentOptions);

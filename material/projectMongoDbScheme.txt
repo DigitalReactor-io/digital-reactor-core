@@ -1,0 +1,35 @@
+{
+    "_id": "573590ea7c3ede1e68287f1c",
+    "status": {
+        "type": "CREATING|LOADING|ERROR|COMPLETED",
+        //LOADING, COMPLETED
+        "current": {
+            "summaryId": "573590ea7c3ede1e68287f1c",
+            "dateCreated": ""
+        }
+    },
+    history: [
+        {
+            "summaryId": "dae213w12",
+            "dateCreated": ""
+        }
+    ]
+}
+
+db.projects.update(
+    {
+        _id: 1
+    },
+    {
+        $set: {
+            status: {
+                type: "LOADING",
+                current: {
+                    summaryId: "1221dw43"
+                }
+            }
+        }  ,
+        $push: {
+            history: {test:"123"}
+        }
+    });
