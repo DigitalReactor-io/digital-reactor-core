@@ -1,13 +1,9 @@
 package io.digitalreactor.core
 
 import io.vertx.core.Handler
-import io.vertx.core.Vertx
-import io.vertx.core.eventbus.EventBus
 import io.vertx.core.eventbus.Message
-import io.vertx.core.http.HttpClient
 import spock.lang.Shared
 import spock.lang.Specification
-
 /**
  * Created by ingvard on 12.04.16.
  */

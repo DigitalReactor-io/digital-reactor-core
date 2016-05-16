@@ -13,7 +13,11 @@ public class SearchPhraseYandexDirectDto {
     private List<SearchPhraseDto> successPhrases;
     private List<SearchPhraseDto> failurePhrases;
 
-    public SearchPhraseYandexDirectDto(String reason, List<SearchPhraseDto> successPhrases, List<SearchPhraseDto> failurePhrases) {
+    public SearchPhraseYandexDirectDto(
+            String reason,
+            List<SearchPhraseDto> successPhrases,
+            List<SearchPhraseDto> failurePhrases
+    ) {
         this.reason = reason;
         this.successPhrases = successPhrases;
         this.failurePhrases = failurePhrases;

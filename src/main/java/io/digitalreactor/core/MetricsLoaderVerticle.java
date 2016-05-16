@@ -6,8 +6,9 @@ import io.digitalreactor.core.api.yandex.YandexApiImpl;
 import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.vertx.core.eventbus.EventBus;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.SimpleDateFormat;
 
 /**
  * Created by ingvard on 07.04.16.
@@ -18,16 +19,16 @@ public class MetricsLoaderVerticle extends ReactorAbstractVerticle {
 
     private EventBus eventBus;
 
-    private YandexApi yandexApi;
+    private  YandexApi yandexApi;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+    private final DateTimeFormatter sdf = DateTimeFormat.forPattern("YYYY-MM-DD");
 
     @Override
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         this.yandexApi = new YandexApiImpl(vertx);
-        eventBus.consumer(LOAD_REPORT, result -> {
-            createReport(toObj((String) result.body(), ReportMessage.class));
+        eventBus.consumer(LOAD_REPORT, msg -> {
+            createReport(toObj(msg, ReportMessage.class));
         });
     }
 
@@ -35,10 +36,12 @@ public class MetricsLoaderVerticle extends ReactorAbstractVerticle {
         DateTime toDay = DateTime.now();
         DateTime before30days = toDay.minusDays(30);
 
+        //// TODO: 14.05.2016 need to resolve all report type
         RequestTable requestTable = RequestTable.of()
                 .ids(reportMessage.counterId)
-                .date1(sdf.format(before30days))
-                .date2(sdf.format(toDay))
+                .date1(sdf.print(before30days))
+                .date2(sdf.print(toDay))
+                .dimensions("day")
                 .metrics("ym:s:visits")
                 .build();
 
@@ -50,7 +53,7 @@ public class MetricsLoaderVerticle extends ReactorAbstractVerticle {
             message.reportType = reportMessage.reportType;
             message.raw = result;
 
-            eventBus.publish(ReportCreatorVerticle.CREATE_REPORT, fromObj(message));
+            eventBus.send(ReportCreatorVerticle.CREATE_REPORT, toJson(message));
         });
 
     }

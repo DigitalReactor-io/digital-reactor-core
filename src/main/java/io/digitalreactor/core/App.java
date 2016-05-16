@@ -9,10 +9,11 @@ import io.vertx.core.Vertx;
 public class App {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        DeploymentOptions deploymentOptions =  new DeploymentOptions().setWorker(true);
+        DeploymentOptions deploymentOptions = new DeploymentOptions().setWorker(true);
 
         WebServer restController = new WebServer();
         SummaryDispatcherVerticle summaryDispatcherVerticle = new SummaryDispatcherVerticle();
+        MetricsLoaderVerticle metricsLoaderVerticle = new MetricsLoaderVerticle();
         UserManagerVerticle userManagerVerticle = new UserManagerVerticle();
         SummaryStorageVerticle summeryStorageVerticle = new SummaryStorageVerticle();
         ProjectManagerVerticle projectManagerVerticle = new ProjectManagerVerticle();
@@ -20,7 +21,9 @@ public class App {
         vertx.deployVerticle(projectManagerVerticle);
         vertx.deployVerticle(summeryStorageVerticle);
         vertx.deployVerticle(summaryDispatcherVerticle);
+        vertx.deployVerticle(metricsLoaderVerticle);
         vertx.deployVerticle(userManagerVerticle);
+        //todo why rest is a worker?
         vertx.deployVerticle(restController, deploymentOptions);
     }
 }

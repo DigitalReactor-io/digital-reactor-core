@@ -1,14 +1,16 @@
 package io.digitalreactor.core.domain;
 
 import io.digitalreactor.core.domain.messages.CreateSummaryMessage;
+import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.domain.publishers.SummaryDispatcherPublisher;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
+
 
 /**
  * Created by ingvard on 07.04.16.
@@ -57,7 +59,11 @@ public class SummaryDispatcherTest {
         CreateSummaryMessage createSummaryMessage = createSummaryMessage();
         summaryDispatcher.createSummary(createSummaryMessage);
 
-        summaryDispatcher.enrichSummary(SUMMARY_ID, currentReport);
+        ReportMessage reportMessage = new ReportMessage();
+        reportMessage.summaryId = createSummaryMessage.summaryId;
+        reportMessage.reportType = currentReport;
+
+        summaryDispatcher.enrichSummary(reportMessage);
 
         verify(summaryDispatcherPublisher).summaryWasCreated(SUMMARY_ID, callbackAddresses);
     }
@@ -69,7 +75,16 @@ public class SummaryDispatcherTest {
         CreateSummaryMessage createSummaryMessage = createSummaryMessage();
         summaryDispatcher.createSummary(createSummaryMessage);
 
-        summaryDispatcher.enrichSummary(SUMMARY_ID, ReportTypeEnum.VISITS_DURING_MONTH);
+        ReportMessage reportMessage1 = new ReportMessage();
+        reportMessage1.summaryId = createSummaryMessage.summaryId;
+        reportMessage1.reportType = ReportTypeEnum.VISITS_DURING_MONTH;
+
+        ReportMessage reportMessage2 = new ReportMessage();
+        reportMessage2.summaryId = createSummaryMessage.summaryId;
+        reportMessage2.reportType = ReportTypeEnum.VISITS_DURING_MONTH;
+
+        summaryDispatcher.enrichSummary(reportMessage1);
+        summaryDispatcher.enrichSummary(reportMessage2);
 
         verify(summaryDispatcherPublisher, never()).summaryWasCreated(any(), any());
     }

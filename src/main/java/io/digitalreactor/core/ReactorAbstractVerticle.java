@@ -1,6 +1,7 @@
 package io.digitalreactor.core;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.eventbus.Message;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 
@@ -9,13 +10,17 @@ import org.boon.json.ObjectMapper;
  */
 public abstract class ReactorAbstractVerticle extends AbstractVerticle {
 
-    private final ObjectMapper mapper = JsonFactory.create();
+    private static final ObjectMapper mapper = JsonFactory.create();
 
-    protected <T> T toObj(String json, Class<T> tClass) {
+    protected static  <T> T toObj(Message message, Class<T> tClass) {
+        return mapper.fromJson((String) message.body(), tClass);
+    }
+
+    protected static <T> T toObj(String json, Class<T> tClass) {
         return mapper.fromJson(json, tClass);
     }
 
-    protected <T> String fromObj(T t) {
+    protected static <T> String toJson(T t) {
         return mapper.toJson(t);
     }
 }

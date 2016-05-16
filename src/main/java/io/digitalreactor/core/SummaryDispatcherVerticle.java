@@ -6,6 +6,7 @@ import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.domain.messages.CreateSummaryMessage;
 import io.digitalreactor.core.domain.publishers.SummaryDispatcherPublisher;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -23,11 +24,18 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
         EventBus eventBus = vertx.eventBus();
 
         eventBus.consumer(CREATE_SUMMARY, msg -> {
-            summaryDispatcher.createSummary(toObj((String) msg.body(), CreateSummaryMessage.class));
+            CreateSummaryMessage summaryMessage = toObj(msg, CreateSummaryMessage.class);
+            eventBus.send(SummaryStorageVerticle.NEW, null, replayMsg -> {
+                if (replayMsg.succeeded()){
+                    summaryMessage.summaryId = ((JsonObject) replayMsg.result()).getString("summaryId");
+                    summaryDispatcher.createSummary(summaryMessage);
+                }
+            });
         });
 
+
         eventBus.consumer(ENRICH_SUMMARY, msg -> {
-            summaryDispatcher.enrichSummary(toObj((String) msg.body(), ReportMessage.class));
+            summaryDispatcher.enrichSummary(toObj(msg, ReportMessage.class));
         });
 
         this.summaryDispatcher = new SummaryDispatcher(new SummaryDispatcherPublisher() {
@@ -38,20 +46,23 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
                     String summaryId,
                     List<ReportTypeEnum> necessaryReports
             ) {
-                necessaryReports.forEach(reportTypeEnum -> {
+                for (ReportTypeEnum type : necessaryReports) {
                     ReportMessage reportMessage = new ReportMessage();
                     reportMessage.clientToken = counterId;
                     reportMessage.summaryId = summaryId;
                     reportMessage.counterId = counterId;
-                    reportMessage.reportType = reportTypeEnum;
+                    reportMessage.reportType = type;
 
-                    eventBus.publish(MetricsLoaderVerticle.LOAD_REPORT, fromObj(reportMessage));
-                });
+                    eventBus.send(MetricsLoaderVerticle.LOAD_REPORT, toJson(reportMessage));
+                }
+
             }
 
             @Override
             public void summaryWasCreated(String summaryId, List<String> callbackAddresses) {
-                //TODO[st.maxim] implementation
+                callbackAddresses.forEach(address -> {
+                    eventBus.send(address, summaryId);
+                });
             }
         });
     }
