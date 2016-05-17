@@ -16,8 +16,7 @@ public class MessageBuilder {
 
     public Message build(Notice notice) {
         Template templateHandler = handlers.get(notice.templateName());
-        //templateHandler.
 
-        return null;
+        return templateHandler.handle(notice);
     };
 }

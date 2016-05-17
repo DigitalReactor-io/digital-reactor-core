@@ -5,4 +5,6 @@ package io.digitalreactor.core.domain.notificator;
  */
 public interface Template {
     String templateName();
+
+    Message handle(Notice notice);
 }

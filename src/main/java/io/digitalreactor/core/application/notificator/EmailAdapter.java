@@ -11,7 +11,7 @@ import io.vertx.ext.mail.MailMessage;
  */
 public class EmailAdapter implements SenderAdapter {
 
-    private final String transportName = "email";
+    public final static String transportName = "email";
     private MailClient mailClient;
 
     public EmailAdapter(MailClient mailClient) {
@@ -36,7 +36,7 @@ public class EmailAdapter implements SenderAdapter {
         return transportName;
     }
 
-    public class EmailMessage implements Message, Email {
+    public static class EmailMessage implements Message, Email {
         private final String from;
         private final String to;
         private final String title;

@@ -1,6 +1,7 @@
 package io.digitalreactor.core;
 
 import io.digitalreactor.core.application.notificator.EmailAdapter;
+import io.digitalreactor.core.application.notificator.template.NewUserEmailTemplate;
 import io.digitalreactor.core.domain.notificator.MessageBuilder;
 import io.digitalreactor.core.domain.notificator.Notice;
 import io.digitalreactor.core.domain.notificator.Sender;
@@ -24,6 +25,7 @@ public class NotificatorVerticle extends ReactorAbstractVerticle {
     @Override
     public void start() throws Exception {
         messageBuilder = new MessageBuilder();
+        messageBuilder.registerTemplateHandler(new NewUserEmailTemplate());
 
         sender = new Sender();
         sender.registerSendHandler(emailAdapter());
@@ -31,7 +33,7 @@ public class NotificatorVerticle extends ReactorAbstractVerticle {
         vertx.eventBus().consumer(NOTIFY, this::notifier);
     }
 
-    private void notifier(Message message) {
+    public void notifier(Message message) {
         //TODO[St.maxim] correct type convert by jackson
         Notice notice = (Notice) message.body();
         sender.handle(messageBuilder.build(notice));
