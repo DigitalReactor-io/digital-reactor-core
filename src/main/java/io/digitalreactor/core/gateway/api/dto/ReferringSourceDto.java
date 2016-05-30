@@ -15,7 +15,16 @@ public class ReferringSourceDto {
     private double conversionChange;
     private List<VisitDto> metrics;
 
-    public ReferringSourceDto(String name, int visit, int visitChange, int goals, int goalsChange, double conversion, double conversionChange, List<VisitDto> metrics) {
+    public ReferringSourceDto(
+            String name,
+            int visit,
+            int visitChange,
+            int goals,
+            int goalsChange,
+            double conversion,
+            double conversionChange,
+            List<VisitDto> metrics
+    ) {
         this.name = name;
         this.visit = visit;
         this.visitChange = visitChange;

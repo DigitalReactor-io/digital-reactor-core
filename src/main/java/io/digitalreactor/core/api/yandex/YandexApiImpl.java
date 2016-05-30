@@ -67,7 +67,7 @@ public class YandexApiImpl implements YandexApi {
     }
 
     private void executeRequest(Request request, String token, Consumer<String> consumer) {
-        httpClient.getAbs(path + request.prefix() + tokenPrefix + token + request.toQuery(), response -> {
+        httpClient.getAbs(path + request.prefix() + tokenPrefix + token +"&"+ request.toQuery(), response -> {
             response.bodyHandler(body -> {
                 vertx.executeBlocking(future -> {
                             consumer.accept(body.toString());

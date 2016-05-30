@@ -10,19 +10,21 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 /**
  * Created by FlaIDzeres on 23.04.2016.
  */
-public class RequestTable implements Request{
+public class RequestTable implements Request {
     private List<String> directClientLogins;
     private List<String> ids;
     private String date1;
     private String date2;
     private List<String> dimensions;
     private List<String> metrics;
+    private String group;
+    private String attribution;
     private String lang;
     private Integer limit;
     private Integer offset;
     private Boolean pretty;
 
-    private String PREFIX = "/stat/v1/data?";
+    private String PREFIX = "/stat/v1/data/bytime?";
 
     private RequestTable(Builder builder) {
         this.directClientLogins = builder.directClientLogins;
@@ -31,10 +33,12 @@ public class RequestTable implements Request{
         this.date1 = builder.date1;
         this.date2 = builder.date2;
         this.dimensions = builder.dimensions;
+        this.group = builder.group;
         this.lang = builder.lang;
         this.limit = builder.limit;
         this.offset = builder.offset;
         this.pretty = builder.pretty;
+        this.attribution = builder.attribution;
     }
 
     public List<String> getDirectClientLogins() {
@@ -77,6 +81,10 @@ public class RequestTable implements Request{
         return pretty;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
     @Override
     public String toQuery() {
         final StringBuilder builder = new StringBuilder();
@@ -93,10 +101,16 @@ public class RequestTable implements Request{
             builder.append("&date2=").append(date2);
         }
         if (isNotEmpty(dimensions)) {
-            builder.append("&dimensions=").append(StringUtils.join(ids, ","));
+            builder.append("&dimensions=").append(StringUtils.join(dimensions, ","));
         }
         if (isNotEmpty(metrics)) {
             builder.append("&metrics=").append(StringUtils.join(metrics, ","));
+        }
+        if (group != null) {
+            builder.append("&group=").append(group);
+        }
+        if (attribution != null) {
+            builder.append("&attribution=").append(attribution);
         }
         if (limit != null) {
             builder.append("&limit=").append(limit);
@@ -126,6 +140,8 @@ public class RequestTable implements Request{
         private String date2;
         private List<String> dimensions;
         private List<String> metrics;
+        private String group;
+        private String attribution;
         private String lang;
         private Integer limit;
         private Integer offset;
@@ -158,6 +174,16 @@ public class RequestTable implements Request{
 
         public Builder metrics(String... metrics) {
             this.metrics = Arrays.asList(metrics);
+            return this;
+        }
+
+        public Builder attribution(String attribution) {
+            this.attribution = attribution;
+            return this;
+        }
+
+        public Builder group(String group) {
+            this.group = group;
             return this;
         }
 

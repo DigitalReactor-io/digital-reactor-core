@@ -1,0 +1,59 @@
+{
+  "query": {
+    "ids": [
+      2138128
+    ],
+    "preset": "sources_search_phrases",
+    "dimensions": [
+      "ym:s:lastSearchPhrase",
+      "ym:s:lastSearchEngineRoot"
+    ],
+    "metrics": [
+      "ym:s:visits",
+      "ym:s:users",
+      "ym:s:bounceRate",
+      "ym:s:pageDepth",
+      "ym:s:avgVisitDurationSeconds"
+    ],
+    "sort": [
+      "-ym:s:visits"
+    ],
+    "date1": "2016-05-24",
+    "date2": "2016-05-30",
+    "limit": 100,
+    "offset": 1,
+    "auto_group_size": "1",
+    "quantile": "50",
+    "attribution": "Last",
+    "currency": "RUB",
+    "group": "Week"
+  },
+  "data": [],
+  "total_rows": 0,
+  "sampled": false,
+  "sample_share": 1.0,
+  "sample_size": 0,
+  "sample_space": 0,
+  "data_lag": 77,
+  "totals": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "min": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "max": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}

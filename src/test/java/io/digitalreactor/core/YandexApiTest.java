@@ -9,9 +9,13 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by FlaIDzeres on 23.04.2016.
@@ -19,7 +23,7 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class YandexApiTest {
 
-    private String token = "ARRC9_4AAr_pqwmAhZwJQMWm2OAqi47ewg";
+    private String token = "ARRC9_4AAr_pAYPQUd4tTruTtGS8ouTlHg";
 
     private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx());
 
@@ -27,8 +31,16 @@ public class YandexApiTest {
     public void tables_async(TestContext context) {
         Async async = context.async();
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date toDay = DateTime.now().toDate();
+        Date before30days = DateTime.now().minusDays(30).toDate();
+
         RequestTable requestTable = RequestTable.of()
-                .ids("31424723", "29235010")
+                .ids("29235010")
+                .date1(simpleDateFormat.format(before30days))
+                .date2(simpleDateFormat.format(toDay))
+                .group("day")
                 .metrics("ym:s:visits")
                 .pretty(true)
                 .build();
