@@ -8,6 +8,15 @@ mainClassName = 'io.digitalreactor.core.App'
 
 run {
     args = ["run", mainClassName]
+    environment = [
+            //Mail section
+            "MAIL_SERVER"        : "smtp.yandex.ru",
+            "MAIL_POST"          : 465,
+            "MAIL_SSL"           : true,
+            "MAIL_USERNAME"      : "DigitalReactor@yandex.ru",
+            "MAIL_PASSWORD"      : "DigitalReactor123",
+            "MAIL_ADDRESS_SENDER": "DigitalReactor@yandex.ru",
+    ]
 }
 
 task fatJar(type: Jar) {
