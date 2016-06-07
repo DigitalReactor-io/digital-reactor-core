@@ -1,6 +1,6 @@
-package io.digitalreactor.core.util;
+package io.digitalreactor.core.promise;
 
-import io.digitalreactor.core.util.func.*;
+import io.digitalreactor.core.promise.func.*;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 

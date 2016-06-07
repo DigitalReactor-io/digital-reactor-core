@@ -1,4 +1,4 @@
-package io.digitalreactor.core.util.func;
+package io.digitalreactor.core.promise.func;
 
 /**
  * Created by flaidzeres on 06.06.2016.

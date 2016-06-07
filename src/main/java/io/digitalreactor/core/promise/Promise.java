@@ -1,8 +1,8 @@
-package io.digitalreactor.core.util;
+package io.digitalreactor.core.promise;
 
-import io.digitalreactor.core.util.func.Consumer1;
-import io.digitalreactor.core.util.func.Consumer2;
-import io.digitalreactor.core.util.func.Consumer3;
+import io.digitalreactor.core.promise.func.Consumer1;
+import io.digitalreactor.core.promise.func.Consumer2;
+import io.digitalreactor.core.promise.func.Consumer3;
 import io.vertx.core.Future;
 
 /**
