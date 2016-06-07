@@ -57,7 +57,7 @@ public class SummaryDispatcherTest {
         CreateSummaryMessage createSummaryMessage = createSummaryMessage();
         summaryDispatcher.createSummary(createSummaryMessage);
 
-        summaryDispatcher.enrichSummary(SUMMARY_ID, currentReport);
+       // summaryDispatcher.enrichSummary(SUMMARY_ID, currentReport);
 
         verify(summaryDispatcherPublisher).summaryWasCreated(SUMMARY_ID, callbackAddresses);
     }
@@ -69,7 +69,7 @@ public class SummaryDispatcherTest {
         CreateSummaryMessage createSummaryMessage = createSummaryMessage();
         summaryDispatcher.createSummary(createSummaryMessage);
 
-        summaryDispatcher.enrichSummary(SUMMARY_ID, ReportTypeEnum.VISITS_DURING_MONTH);
+       // summaryDispatcher.enrichSummary(SUMMARY_ID, ReportTypeEnum.VISITS_DURING_MONTH);
 
         verify(summaryDispatcherPublisher, never()).summaryWasCreated(any(), any());
     }
