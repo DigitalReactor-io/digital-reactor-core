@@ -4,6 +4,7 @@ import io.digitalreactor.core.promise.func.Consumer1;
 import io.digitalreactor.core.promise.func.Consumer2;
 import io.digitalreactor.core.promise.func.Consumer3;
 import io.digitalreactor.core.promise.func.Consumer4;
+import io.vertx.core.Context;
 import io.vertx.core.Future;
 
 /**
@@ -13,23 +14,39 @@ public class Promise1Impl<A> extends AbstractPromise implements Promise1<A> {
 
     private final Future<A> futureA;
 
-    private Promise1Impl(Future<A> futureA, AbstractPromise parent, PromiseHandler handler) {
-        super(parent, handler);
+    private final Context context;
+
+    private Promise1Impl(
+            final Context context,
+            final Future<A> futureA,
+            final AbstractPromise parent,
+            final PromiseHandler handler
+    ) {
+        super(parent, handler, context);
         this.futureA = futureA;
+        this.context = context;
     }
 
-    public static <A> Promise1<A> of(Future<A> futureA, AbstractPromise parent) {
-        return new Promise1Impl<>(futureA, parent, null);
+    public static <A> Promise1<A> of(Context context, Future<A> futureA, PromiseHandler handler) {
+        return new Promise1Impl<>(context, futureA, null, handler);
     }
 
     public static <A> Promise1<A> of(Future<A> futureA, AbstractPromise parent, PromiseHandler handler) {
-        return new Promise1Impl<>(futureA, parent, handler);
+        return new Promise1Impl<>(null, futureA, parent, handler);
+    }
+
+    public static <A> Promise1<A> of(Context context, Future<A> futureA, AbstractPromise parent) {
+        return new Promise1Impl<>(context, futureA, parent, null);
+    }
+
+    public static <A> Promise1<A> of(Context context, Future<A> futureA, AbstractPromise parent, PromiseHandler handler) {
+        return new Promise1Impl<>(context, futureA, parent, handler);
     }
 
     @Override
     public <B> Promise1<B> then(Consumer2<A, Future<B>> consumer) {
         Future<B> futureA = Future.future();
-        Promise1<B> promise1 = Promise1Impl.of(futureA, this);
+        Promise1<B> promise1 = Promise1Impl.of(context, futureA, this);
         this.futureA.setHandler(r -> {
             consumer.apply(r.result(), futureA);
         });

@@ -5,7 +5,7 @@ import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
 /**
- * Created by flaidzeres on 06.06.2016.
+ * Created by flaidzeres from 06.06.2016.
  */
 public class Promise2Impl<A, B> extends AbstractPromise implements Promise2<A, B> {
 
@@ -35,7 +35,7 @@ public class Promise2Impl<A, B> extends AbstractPromise implements Promise2<A, B
     @Override
     public <C> Promise1<C> then(Consumer3<A, B, Future<C>> consumer) {
         Future<C> futureC = Future.future();
-        Promise1<C> promise1 = Promise1Impl.of(futureC, this);
+        Promise1<C> promise1 = Promise1Impl.of(futureC, this, null);
         CompositeFuture.all(futureA, futureB).setHandler(r -> {
             consumer.apply(futureA.result(), futureB.result(), futureC);
         });
