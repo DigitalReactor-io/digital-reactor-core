@@ -20,13 +20,25 @@ public class NotifierVerticle extends AbstractVerticle {
     private NotificationRouter notificationRouter;
     private Notifier notifier;
 
+    public NotifierVerticle(NotificationRouter notificationRouter, Notifier notifier) {
+        this.notificationRouter = notificationRouter;
+        this.notifier = notifier;
+    }
+
+    public enum Address {
+        NOTIFY;
+
+        public final static String BASE_ADDRESS = "digitalreactor.notifier.";
+
+        public String address() {
+            return BASE_ADDRESS + name();
+        }
+    }
+
     @Override
     public void start() throws Exception {
-        NotificationTemplateEmailMapper notificationTemplateEmailMapper = new NotificationTemplateEmailMapper();
-        notificationTemplateEmailMapper.registerHandler();
 
-        EmailAdapter emailAdapter = new EmailAdapter(mailClient(), notificationTemplateEmailMapper);
-        notifier.registerAdapter(emailAdapter);
+        vertx.eventBus().consumer(Address.NOTIFY.address(), this::notificationResolver);
     }
 
     private void notificationResolver(Message<Notification> message) {
