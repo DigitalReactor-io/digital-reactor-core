@@ -50,7 +50,7 @@ public class SummaryDispatcherTest {
         verify(summaryDispatcherPublisher).createReport(COUNTER_ID, CLIENT_TOKEN, SUMMARY_ID, necessaryReports);
     }
 
-    @Test
+  /*  @Test
     public void enrichSummary_lastNecessaryReport_sendNotificationByCallbackAddresses() {
         ReportTypeEnum currentReport = ReportTypeEnum.VISITS_DURING_MONTH;
         necessaryReports.add(currentReport);
@@ -60,9 +60,9 @@ public class SummaryDispatcherTest {
         summaryDispatcher.enrichSummary(SUMMARY_ID, currentReport);
 
         verify(summaryDispatcherPublisher).summaryWasCreated(SUMMARY_ID, callbackAddresses);
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void enrichSummary_onlyOneReportWasCompleted_notificationDoesNotSent() {
         necessaryReports.add(ReportTypeEnum.VISITS_DURING_MONTH);
         necessaryReports.add(ReportTypeEnum.REFERRING_SOURCE);
@@ -72,7 +72,7 @@ public class SummaryDispatcherTest {
         summaryDispatcher.enrichSummary(SUMMARY_ID, ReportTypeEnum.VISITS_DURING_MONTH);
 
         verify(summaryDispatcherPublisher, never()).summaryWasCreated(any(), any());
-    }
+    }*/
 
     private CreateSummaryMessage createSummaryMessage() {
         return new CreateSummaryMessage(

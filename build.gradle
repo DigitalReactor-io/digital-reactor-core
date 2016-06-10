@@ -8,6 +8,15 @@ mainClassName = 'io.digitalreactor.core.App'
 
 run {
     args = ["run", mainClassName]
+    environment = [
+            //Mail section
+            "MAIL_SERVER"        : "smtp.yandex.ru",
+            "MAIL_POST"          : 465,
+            "MAIL_SSL"           : true,
+            "MAIL_USERNAME"      : "DigitalReactor@yandex.ru",
+            "MAIL_PASSWORD"      : "DigitalReactor123",
+            "MAIL_ADDRESS_SENDER": "DigitalReactor@yandex.ru",
+    ]
 }
 
 task fatJar(type: Jar) {
@@ -40,6 +49,7 @@ dependencies {
     compile 'io.vertx:vertx-mysql-postgresql-client:3.2.1'
     compile 'io.fastjson:boon:0.33'
     compile 'io.vertx:vertx-mongo-client:3.2.1'
+    compile 'io.vertx:vertx-mail-client:3.2.1'
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile 'io.vertx:vertx-unit:3.2.1'
     testCompile 'org.mockito:mockito-core:1.10.19'
