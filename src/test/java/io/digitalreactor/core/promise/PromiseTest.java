@@ -1,10 +1,8 @@
 package io.digitalreactor.core.promise;
 
-import io.vertx.core.Context;
+import io.digitalreactor.core.promise.oncontext.Promise;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -17,117 +15,31 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class PromiseTest extends AbstractPromiseTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(PromiseTest.class);
-
     @Test
-    public void test1(TestContext context) {
+    public void test(TestContext testContext) {
+        Async async = testContext.async();
         Vertx vertx = rule.vertx();
-        Async async = context.async(1);
 
-        MyVerticle v = new MyVerticle();
+        Promise.onContext(vertx)
+                .when((Future<Void> f) -> {
+                    System.out.println(Thread.currentThread().getName());
+                    System.out.println("start");
+                    f.complete();
+                })
+                .andThenBlocking(() -> {
+                    System.out.println(Thread.currentThread().getName());
+                    System.out.println("next");
+                })
+                .andThen((Future<String> f) -> {
+                    System.out.println(Thread.currentThread().getName());
+                    vertx.deployVerticle(new MyVerticle(), f.completer());
+                })
+                .then(id -> {
+                    System.out.println(Thread.currentThread().getName());
+                    System.out.println("end id:" + id);
+                    async.complete();
+                });
 
-        Promise.when((Future<String> f1) -> {
-            vertx.deployVerticle(v, r -> {
-                f1.complete();
-                async.countDown();
-            });
-        }).eval();
-
-        vertx.deployVerticle(v, r -> {
-            async.complete();
-        });
-
-    }
-
-    @Test
-    public void test2(TestContext context) {
-        Vertx vertx = rule.vertx();
-        Async async = context.async(1);
-
-        MyVerticle v = new MyVerticle();
-
-        Promise.when((Future<String> f1) -> {
-            vertx.deployVerticle(v, r -> {
-                f1.complete(r.result());
-                async.countDown();
-            });
-
-        }).done(() -> {
-            async.complete();
-        });
-
-    }
-
-    @Test
-    public void test3(TestContext context) {
-        Vertx vertx = rule.vertx();
-        Async async = context.async(1);
-
-        MyVerticle v = new MyVerticle();
-
-        Promise.when((Future<String> f1) -> {
-            vertx.deployVerticle(v, r -> {
-                f1.complete(r.result());
-                async.countDown();
-            });
-
-        }).then((id) -> {
-            context.assertNotNull(id);
-            async.complete();
-        });
-
-    }
-
-    @Test
-    public void test4(TestContext context) {
-        Vertx vertx = rule.vertx();
-        Async async = context.async(2);
-
-        MyVerticle v1 = new MyVerticle();
-        MyVerticle v2 = new MyVerticle();
-
-        Promise.when((Future<String> f1) -> {
-            vertx.deployVerticle(v1, r -> {
-                f1.complete(r.result());
-                async.countDown();
-            });
-        }).then((String id1, Future<String> f2) -> {
-            context.assertNotNull(id1);
-            vertx.deployVerticle(v2, r -> {
-                f2.complete(r.result());
-                async.countDown();
-            });
-        }).then(id2 -> {
-            context.assertNotNull(id2);
-            async.complete();
-        });
-
-    }
-
-    @Test
-    public void test5(TestContext testContext) {
-        Vertx vertx = rule.vertx();
-        Context context = vertx.getOrCreateContext();
-        Async async = testContext.async(2);
-
-        MyVerticle v1 = new MyVerticle();
-        MyVerticle v2 = new MyVerticle();
-
-        Promise.from(context).onContext((Future<String> f1) -> {
-            vertx.deployVerticle(v1, r -> {
-                f1.complete(r.result());
-                async.countDown();
-            });
-        }).then((String id1, Future<String> f2) -> {
-            testContext.assertNotNull(id1);
-            vertx.deployVerticle(v2, r -> {
-                f2.complete(r.result());
-                async.countDown();
-            });
-        }).then(id2 -> {
-            testContext.assertNotNull(id2);
-            async.complete();
-        });
 
     }
 
