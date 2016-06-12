@@ -1,13 +1,14 @@
-package io.digitalreactor.core.api.yandex;
+package io.digitalreactor.core.api.yandex.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 /**
- * Created by FlaIDzeres on 23.04.2016.
+ * Created by flaidzeres on 12.06.2016.
  */
 public class Response {
+
     @JsonProperty("total_rows")
     private Long totalRows;
 
@@ -26,7 +27,7 @@ public class Response {
     private Integer dataLag;
 
     @JsonProperty("query")
-    private RequestTable requestTable;
+    private Request request;
 
     private List<Double> totals;
 
@@ -61,8 +62,8 @@ public class Response {
         return dataLag;
     }
 
-    public RequestTable getRequestTable() {
-        return requestTable;
+    public Request getRequestTable() {
+        return request;
     }
 
     public List<Double> getTotals() {
@@ -93,4 +94,5 @@ public class Response {
             return metrics;
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package io.digitalreactor.core.api.yandex;
+package io.digitalreactor.core.api.yandex.model;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,78 +8,29 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 /**
- * Created by FlaIDzeres on 23.04.2016.
+ * Created by flaidzeres on 12.06.2016.
  */
-public class RequestTable implements Request{
+public class Request extends AbstractRequest {
     private List<String> directClientLogins;
     private List<String> ids;
     private String date1;
     private String date2;
     private List<String> dimensions;
     private List<String> metrics;
+    private String group;
+    private String attribution;
+    private String preset;
     private String lang;
     private Integer limit;
     private Integer offset;
     private Boolean pretty;
-
-    private String PREFIX = "/stat/v1/data?";
-
-    private RequestTable(Builder builder) {
-        this.directClientLogins = builder.directClientLogins;
-        this.ids = builder.ids;
-        this.metrics = builder.metrics;
-        this.date1 = builder.date1;
-        this.date2 = builder.date2;
-        this.dimensions = builder.dimensions;
-        this.lang = builder.lang;
-        this.limit = builder.limit;
-        this.offset = builder.offset;
-        this.pretty = builder.pretty;
-    }
-
-    public List<String> getDirectClientLogins() {
-        return directClientLogins;
-    }
-
-    public List<String> getIds() {
-        return ids;
-    }
-
-    public List<String> getMetrics() {
-        return metrics;
-    }
-
-    public String getDate1() {
-        return date1;
-    }
-
-    public String getDate2() {
-        return date2;
-    }
-
-    public List<String> getDimensions() {
-        return dimensions;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public Integer getOffset() {
-        return offset;
-    }
-
-    public Boolean getPretty() {
-        return pretty;
-    }
+    private String token;
+    private String prefix;
 
     @Override
     public String toQuery() {
         final StringBuilder builder = new StringBuilder();
+        builder.append(prefix);
         if (isNotEmpty(directClientLogins)) {
             builder.append("&direct_client_logins=").append(StringUtils.join(directClientLogins, ","));
         }
@@ -93,10 +44,19 @@ public class RequestTable implements Request{
             builder.append("&date2=").append(date2);
         }
         if (isNotEmpty(dimensions)) {
-            builder.append("&dimensions=").append(StringUtils.join(ids, ","));
+            builder.append("&dimensions=").append(StringUtils.join(dimensions, ","));
         }
         if (isNotEmpty(metrics)) {
             builder.append("&metrics=").append(StringUtils.join(metrics, ","));
+        }
+        if (group != null) {
+            builder.append("&group=").append(group);
+        }
+        if (attribution != null) {
+            builder.append("&attribution=").append(attribution);
+        }
+        if (preset != null) {
+            builder.append("&preset=").append(preset);
         }
         if (limit != null) {
             builder.append("&limit=").append(limit);
@@ -107,12 +67,13 @@ public class RequestTable implements Request{
         if (pretty != null) {
             builder.append("&pretty=").append(pretty);
         }
-        return builder.toString().replaceFirst("&", "");
+        if (StringUtils.isNoneEmpty(token)) {
+            builder.append("&oauth_token=").append(token);
+        }
+        return builder.toString();
     }
 
-    @Override
-    public String prefix() {
-        return PREFIX;
+    private Request() {
     }
 
     public static Builder of() {
@@ -120,70 +81,85 @@ public class RequestTable implements Request{
     }
 
     public static class Builder {
-        private List<String> directClientLogins;
-        private List<String> ids;
-        private String date1;
-        private String date2;
-        private List<String> dimensions;
-        private List<String> metrics;
-        private String lang;
-        private Integer limit;
-        private Integer offset;
-        private Boolean pretty;
+        private Request request = new Request();
+
+        public Builder preset(String preset) {
+            request.preset = preset;
+            return this;
+        }
+
+        public Builder prefix(String prefix) {
+            request.prefix = prefix;
+            return this;
+        }
 
         public Builder directClientLogins(String... directClientLogins) {
-            this.directClientLogins = Arrays.asList(directClientLogins);
+            request.directClientLogins = Arrays.asList(directClientLogins);
             return this;
         }
 
         public Builder ids(String... ids) {
-            this.ids = Arrays.asList(ids);
+            request.ids = Arrays.asList(ids);
             return this;
         }
 
         public Builder date1(String date1) {
-            this.date1 = date1;
+            request.date1 = date1;
             return this;
         }
 
         public Builder date2(String date2) {
-            this.date2 = date2;
+            request.date2 = date2;
             return this;
         }
 
         public Builder dimensions(String... dimensions) {
-            this.dimensions = Arrays.asList(dimensions);
+            request.dimensions = Arrays.asList(dimensions);
             return this;
         }
 
         public Builder metrics(String... metrics) {
-            this.metrics = Arrays.asList(metrics);
+            request.metrics = Arrays.asList(metrics);
+            return this;
+        }
+
+        public Builder group(String group) {
+            request.group = group;
+            return this;
+        }
+
+        public Builder attribution(String attribution) {
+            request.attribution = attribution;
             return this;
         }
 
         public Builder lang(String lang) {
-            this.lang = lang;
+            request.lang = lang;
             return this;
         }
 
         public Builder limit(Integer limit) {
-            this.limit = limit;
+            request.limit = limit;
             return this;
         }
 
         public Builder offset(Integer offset) {
-            this.offset = offset;
+            request.offset = offset;
             return this;
         }
 
         public Builder pretty(Boolean pretty) {
-            this.pretty = pretty;
+            request.pretty = pretty;
             return this;
         }
 
-        public RequestTable build() {
-            return new RequestTable(this);
+        public Builder token(String token) {
+            request.token = token;
+            return this;
+        }
+
+        public Request build() {
+            return request;
         }
     }
-
 }

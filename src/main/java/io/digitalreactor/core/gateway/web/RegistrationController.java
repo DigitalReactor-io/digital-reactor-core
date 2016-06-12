@@ -1,10 +1,12 @@
 package io.digitalreactor.core.gateway.web;
 
 import io.digitalreactor.core.UserManagerVerticle;
-import io.digitalreactor.core.api.yandex.RequestCounterList;
 import io.digitalreactor.core.api.yandex.YandexApi;
 import io.digitalreactor.core.api.yandex.YandexApiImpl;
+import io.digitalreactor.core.api.yandex.model.RequestCounters;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
+import io.digitalreactor.core.promise.oncontext.Promise;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -106,29 +108,35 @@ public class RegistrationController {
                     temporaryTokenStorage.put(tokenCode, accessToken);
 
                     YandexApi yandexApi = new YandexApiImpl(vertx);
-                    yandexApi.counters(RequestCounterList.of().build(), accessToken, countersResponse -> {
-                        JsonArray counters = new JsonObject(countersResponse).getJsonArray("counters");
-                        List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
-                        for (Object counter : counters) {
-                            Long id = ((JsonObject) counter).getLong("id");
-                            String name = ((JsonObject) counter).getString("name");
+                    Promise.onContext(vertx)
+                            .when((Future<JsonObject> f) -> {
+                                yandexApi.requestAsJson(
+                                        RequestCounters.of().token(accessToken).build(),
+                                        f.completer()
+                                );
+                            })
+                            .then(response -> {
+                                JsonArray counters = response.getJsonArray("counters");
+                                List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
-                            countersDto.add(new CounterShortDto(id, name));
-                        }
+                                for (Object counter : counters) {
+                                    Long id = ((JsonObject) counter).getLong("id");
+                                    String name = ((JsonObject) counter).getString("name");
 
-                        routingContext.put("counters", countersDto);
+                                    countersDto.add(new CounterShortDto(id, name));
+                                }
 
-                        engine.render(routingContext, "src/main/webapp/registration-step-3.hbs", res -> {
-                            if (res.succeeded()) {
-                                routingContext.response().end(res.result());
-                            } else {
-                                routingContext.fail(res.cause());
-                            }
-                        });
+                                routingContext.put("counters", countersDto);
 
-                    });
-
+                                engine.render(routingContext, "src/main/webapp/registration-step-3.hbs", res -> {
+                                    if (res.succeeded()) {
+                                        routingContext.response().end(res.result());
+                                    } else {
+                                        routingContext.fail(res.cause());
+                                    }
+                                });
+                            });
                 }
             });
 
