@@ -1,0 +1,79 @@
+{
+  "query": {
+    "ids": [
+      29235010
+    ],
+    "dimensions": [],
+    "metrics": [
+      "ym:s:visits"
+    ],
+    "sort": [
+      "-ym:s:visits"
+    ],
+    "date1": "2015-01-01",
+    "date2": "2015-01-07",
+    "group": "day",
+    "auto_group_size": "1",
+    "quantile": "50",
+    "attribution": "Last",
+    "currency": "RUB",
+    "auto_group_type": "day"
+  },
+  "data": [
+    {
+      "dimensions": [],
+      "metrics": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0
+        ]
+      ]
+    }
+  ],
+  "total_rows": 0,
+  "sampled": false,
+  "sample_share": 1.0,
+  "sample_size": 0,
+  "sample_space": 0,
+  "data_lag": 83,
+  "totals": [
+    [
+     28.0
+    ]
+  ],
+  "time_intervals": [
+    [
+      "2015-01-01",
+      "2015-01-01"
+    ],
+    [
+      "2015-01-02",
+      "2015-01-02"
+    ],
+    [
+      "2015-01-03",
+      "2015-01-03"
+    ],
+    [
+      "2015-01-04",
+      "2015-01-04"
+    ],
+    [
+      "2015-01-05",
+      "2015-01-05"
+    ],
+    [
+      "2015-01-06",
+      "2015-01-06"
+    ],
+    [
+      "2015-01-07",
+      "2015-01-07"
+    ]
+  ]
+}

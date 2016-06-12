@@ -8,11 +8,15 @@ public class VisitDto {
         HOLIDAY, WEEKDAY
     }
 
-    private int number;
-    private String date;
-    private DayType dayType;
+    private final int number;
+    private final String date;
+    private final DayType dayType;
 
-    public VisitDto(int number, String date, DayType dayType) {
+    public VisitDto(
+           final int number,
+           final String date,
+           final DayType dayType
+    ) {
         this.number = number;
         this.date = date;
         this.dayType = dayType;

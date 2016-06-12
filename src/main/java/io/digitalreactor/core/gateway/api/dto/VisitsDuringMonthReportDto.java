@@ -11,7 +11,6 @@ import java.util.List;
  * Created by MStepachev on 11.05.2016.
  */
 public class VisitsDuringMonthReportDto {
-
     private ReportTypeEnum type = ReportTypeEnum.VISITS_DURING_MONTH;
     private int visit;
     private int percent;
@@ -19,7 +18,13 @@ public class VisitsDuringMonthReportDto {
     private List<VisitDto> metrics;
     private String reason;
 
-    public VisitsDuringMonthReportDto(int visit, int percent, ActionEnum action, List<VisitDto> metrics, String reason) {
+    public VisitsDuringMonthReportDto(
+           final int visit,
+           final int percent,
+           final ActionEnum action,
+           final List<VisitDto> metrics,
+           final String reason
+    ) {
         this.visit = visit;
         this.percent = percent;
         this.action = action;
