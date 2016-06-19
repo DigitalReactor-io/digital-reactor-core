@@ -2,6 +2,7 @@ package io.digitalreactor.core.domain;
 
 import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.gateway.api.dto.ReferringSourceReportDto;
+import io.digitalreactor.core.gateway.api.dto.SearchPhraseYandexDirectDto;
 import io.digitalreactor.core.gateway.api.dto.VisitDto;
 import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
 import org.apache.commons.io.FileUtils;
@@ -15,7 +16,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by flaidzeres on 12.06.2016.
@@ -60,8 +64,14 @@ public class ReportCreatorImplTest {
     }
 
     @Test
-    public void createSearchPhraseYandexReport() {
+    public void createSearchPhraseYandexReport() throws IOException {
+        String raw = FileUtils.readFileToString(new File("src/test/resources/directSearchPhrase.json"));
+        ReportMessage message = new ReportMessage();
+        message.raw = raw;
 
+        SearchPhraseYandexDirectDto searchPhraseYandexReport = reportCreator.createSearchPhraseYandexReport(message);
+
+        assertThat(searchPhraseYandexReport, is(equalTo(null)));
     }
 
     @After

@@ -8,15 +8,15 @@ import java.time.LocalTime;
 public class SearchPhraseDto {
     private String phrase;
     private int visits;
-    private double refusals;
+    private double bounceRate;
     private double viewDepth;
-    private LocalTime timeOnSite;
+    private double timeOnSite;
     private double conversion;
 
-    public SearchPhraseDto(String phrase, int visits, double refusals, double viewDepth, LocalTime timeOnSite, double conversion) {
+    public SearchPhraseDto(String phrase, int visits, double refusals, double viewDepth, double timeOnSite, double conversion) {
         this.phrase = phrase;
         this.visits = visits;
-        this.refusals = refusals;
+        this.bounceRate = refusals;
         this.viewDepth = viewDepth;
         this.timeOnSite = timeOnSite;
         this.conversion = conversion;
@@ -30,15 +30,15 @@ public class SearchPhraseDto {
         return visits;
     }
 
-    public double getRefusals() {
-        return refusals;
+    public double getBounceRate() {
+        return bounceRate;
     }
 
     public double getViewDepth() {
         return viewDepth;
     }
 
-    public LocalTime getTimeOnSite() {
+    public double getTimeOnSite() {
         return timeOnSite;
     }
 

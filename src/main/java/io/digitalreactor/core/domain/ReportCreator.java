@@ -2,6 +2,7 @@ package io.digitalreactor.core.domain;
 
 import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.gateway.api.dto.ReferringSourceReportDto;
+import io.digitalreactor.core.gateway.api.dto.SearchPhraseYandexDirectDto;
 import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
 
 /**
@@ -13,5 +14,5 @@ public interface ReportCreator {
 
     ReferringSourceReportDto createReferringSourceReport(ReportMessage reportMessage);
 
-    VisitsDuringMonthReportDto createSearchPhraseYandexReport(ReportMessage reportMessage);
+    SearchPhraseYandexDirectDto createSearchPhraseYandexReport(ReportMessage reportMessage);
 }

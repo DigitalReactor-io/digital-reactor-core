@@ -1,9 +1,7 @@
 package io.digitalreactor.core.domain;
 
 import io.digitalreactor.core.domain.messages.ReportMessage;
-import io.digitalreactor.core.gateway.api.dto.ReferringSourceDto;
-import io.digitalreactor.core.gateway.api.dto.ReferringSourceReportDto;
-import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
+import io.digitalreactor.core.gateway.api.dto.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.boon.json.JsonFactory;
@@ -63,7 +61,56 @@ public class ReportCreatorImpl implements ReportCreator {
     }
 
     @Override
-    public VisitsDuringMonthReportDto createSearchPhraseYandexReport(ReportMessage reportMessage) {
-        return null;
+    public SearchPhraseYandexDirectDto createSearchPhraseYandexReport(ReportMessage reportMessage) {
+        JsonObject object = new JsonObject(reportMessage.raw);
+        JsonArray phrasesWithMetrics = object.getJsonArray("data");
+        String reason = "some_reason";
+
+        return new SearchPhraseYandexDirectDto(
+                reason,
+                extractTenSuccessPhrases(phrasesWithMetrics),
+                extractFailurePhrases(phrasesWithMetrics)
+        );
+    }
+
+    private List<SearchPhraseDto> extractFailurePhrases(JsonArray phrasesWithMetrics) {
+        List<SearchPhraseDto> searchPhraseDtos = new ArrayList<>();
+
+        for (Object obj : phrasesWithMetrics) {
+            String phrase = ((JsonObject) obj).getJsonArray("dimensions").getJsonObject(0).getString("name");
+            int visits = ((JsonObject) obj).getJsonArray("metrics").getInteger(0);
+            double pageDepth = ((JsonObject) obj).getJsonArray("metrics").getDouble(1);
+            double avgVisitDurationSeconds = ((JsonObject) obj).getJsonArray("metrics").getDouble(2);
+            double bounceRate = ((JsonObject) obj).getJsonArray("metrics").getDouble(3);
+
+            searchPhraseDtos.add(new SearchPhraseDto(phrase, visits, bounceRate, pageDepth, avgVisitDurationSeconds, 0.0));
+        }
+
+        return searchPhraseDtos.size() > 10 ? searchPhraseDtos.subList(0, 10) : searchPhraseDtos;
+    }
+
+    private List<SearchPhraseDto> extractTenSuccessPhrases(JsonArray phrasesWithMetrics) {
+
+        List<SearchPhraseDto> searchPhraseDtos = new ArrayList<>();
+
+        for (Object obj : phrasesWithMetrics) {
+            String phrase = ((JsonObject) obj).getJsonArray("dimensions").getJsonObject(0).getString("name");
+            int visits = ((JsonObject) obj).getJsonArray("metrics").getInteger(0);
+            double pageDepth = ((JsonObject) obj).getJsonArray("metrics").getDouble(1);
+            double avgVisitDurationSeconds = ((JsonObject) obj).getJsonArray("metrics").getDouble(2);
+            double bounceRate = ((JsonObject) obj).getJsonArray("metrics").getDouble(3);
+
+            if (bounceRate > 50.0 && avgVisitDurationSeconds > 15.0) {
+                searchPhraseDtos.add(new SearchPhraseDto(phrase, visits, bounceRate, pageDepth, avgVisitDurationSeconds, 0.0));
+            }
+        }
+
+        searchPhraseDtos.sort((p1, p2) -> p1.getVisits() > p2.getVisits() ? 1 : p1.getVisits() == p2.getVisits() ? 0 : -1);
+
+        return searchPhraseDtos.size() > 10 ? searchPhraseDtos.subList(0, 10) : searchPhraseDtos;
+    }
+
+    private double weightFunction(int visits, double pageDepth, double avgVisitDurationSeconds, double bounceRate) {
+        return visits + bounceRate * 10 + pageDepth + avgVisitDurationSeconds / 6;
     }
 }
