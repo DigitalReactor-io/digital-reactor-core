@@ -1,5 +1,6 @@
 package io.digitalreactor.core;
 
+import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -8,7 +9,7 @@ import io.vertx.ext.mongo.MongoClient;
 /**
  * Created by ingvard on 07.04.16.
  */
-public class SummaryStorageVerticle extends AbstractVerticle {
+public class SummaryStorageVerticle extends ReactorAbstractVerticle {
 
     private final static String BASE_USER_MANAGER = "digitalreactor.core.summaries.";
     public final static String NEW = BASE_USER_MANAGER + "new";
@@ -47,8 +48,9 @@ public class SummaryStorageVerticle extends AbstractVerticle {
     }
 
     private void enrichSummary(Message message) {
-        String summaryId = "";
-        String reportJson = "";
+        ReportMessage msg = toObj((String) message.body(), ReportMessage.class);
+        String summaryId = msg.summaryId;
+        String reportJson = msg.report;
 
         client.update(SUMMARIES_COLLECTION,
                 new JsonObject().put("_id", summaryId),
