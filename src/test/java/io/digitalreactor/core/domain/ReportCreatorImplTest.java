@@ -1,10 +1,12 @@
 package io.digitalreactor.core.domain;
 
 import io.digitalreactor.core.domain.messages.ReportMessage;
+import io.digitalreactor.core.gateway.api.dto.ReferringSourceReportDto;
 import io.digitalreactor.core.gateway.api.dto.VisitDto;
 import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
 
@@ -47,8 +49,14 @@ public class ReportCreatorImplTest {
     }
 
     @Test
-    public void createVisitsDuringMothReport() {
+    public void createVisitsDuringMothReport() throws IOException {
+        String raw = FileUtils.readFileToString(new File("src/test/resources/refereceSources.json"));
+        ReportMessage message = new ReportMessage();
+        message.raw = raw;
 
+        final ReferringSourceReportDto referringSourceReport = reportCreator.createReferringSourceReport(message);
+
+        Assert.assertNotNull(referringSourceReport);
     }
 
     @Test
