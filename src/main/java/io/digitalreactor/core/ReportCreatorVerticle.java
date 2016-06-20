@@ -26,6 +26,8 @@ public class ReportCreatorVerticle extends ReactorAbstractVerticle {
                 message.report = mapper.toJson(reportCreator.createVisitsDuringMothReport(message));
             } else if (ReportTypeEnum.REFERRING_SOURCE.equals(message.reportType)) {
                 message.report = mapper.toJson(reportCreator.createReferringSourceReport(message));
+            } else if (ReportTypeEnum.SEARCH_PHRASE_YANDEX_DIRECT.equals(message.reportType)) {
+                message.report = mapper.toJson(reportCreator.createSearchPhraseYandexReport(message));
             }
 
             eventBus.send(SummaryStorageVerticle.ENRICH, fromObj(message));

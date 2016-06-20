@@ -69,11 +69,11 @@ public class ReportCreatorImpl implements ReportCreator {
         return new SearchPhraseYandexDirectDto(
                 reason,
                 extractTenSuccessPhrases(phrasesWithMetrics),
-                extractFailurePhrases(phrasesWithMetrics)
+                extractTenFailurePhrases(phrasesWithMetrics)
         );
     }
 
-    private List<SearchPhraseDto> extractFailurePhrases(JsonArray phrasesWithMetrics) {
+    private List<SearchPhraseDto> extractTenFailurePhrases(JsonArray phrasesWithMetrics) {
         List<SearchPhraseDto> searchPhraseDtos = new ArrayList<>();
 
         for (Object obj : phrasesWithMetrics) {
@@ -86,7 +86,15 @@ public class ReportCreatorImpl implements ReportCreator {
             searchPhraseDtos.add(new SearchPhraseDto(phrase, visits, bounceRate, pageDepth, avgVisitDurationSeconds, 0.0));
         }
 
-        return searchPhraseDtos.size() > 10 ? searchPhraseDtos.subList(0, 10) : searchPhraseDtos;
+        searchPhraseDtos.sort((p1, p2) ->
+                weightFunctionBySearchPhraseDto(p1) > weightFunctionBySearchPhraseDto(p2) ? 1 :
+                        weightFunctionBySearchPhraseDto(p1) == weightFunctionBySearchPhraseDto(p2) ? 0 : -1
+        );
+
+        List<SearchPhraseDto> failure = searchPhraseDtos.size() > 10 ? searchPhraseDtos.subList(0, 10) : searchPhraseDtos;
+        failure.sort((p1, p2) -> p1.getVisits() > p2.getVisits() ? 1 : p1.getVisits() == p2.getVisits() ? 0 : -1);
+
+        return failure;
     }
 
     private List<SearchPhraseDto> extractTenSuccessPhrases(JsonArray phrasesWithMetrics) {
@@ -108,6 +116,15 @@ public class ReportCreatorImpl implements ReportCreator {
         searchPhraseDtos.sort((p1, p2) -> p1.getVisits() > p2.getVisits() ? 1 : p1.getVisits() == p2.getVisits() ? 0 : -1);
 
         return searchPhraseDtos.size() > 10 ? searchPhraseDtos.subList(0, 10) : searchPhraseDtos;
+    }
+
+    private double weightFunctionBySearchPhraseDto(SearchPhraseDto searchPhraseDto) {
+        return weightFunction(
+                searchPhraseDto.getVisits(),
+                searchPhraseDto.getViewDepth(),
+                searchPhraseDto.getTimeOnSite(),
+                searchPhraseDto.getBounceRate()
+        );
     }
 
     private double weightFunction(int visits, double pageDepth, double avgVisitDurationSeconds, double bounceRate) {

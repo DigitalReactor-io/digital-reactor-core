@@ -5,6 +5,7 @@ import io.digitalreactor.core.domain.messages.ReportMessage;
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import static io.digitalreactor.core.api.yandex.model.AbstractRequest.DATA;
 import static io.digitalreactor.core.api.yandex.model.AbstractRequest.DATA_BY_TYPE;
@@ -45,11 +46,19 @@ public class RequestBuilder {
                     .token(reportMessage.clientToken)
                     .build();
         } else if (SEARCH_PHRASE_YANDEX_DIRECT.equals(reportMessage.reportType)) {
+
+            LocalDate dateNow = LocalDate.now();
+            LocalDate dateMonthAgo = dateNow.minusDays(30);
+
             return builder
                     .prefix(DATA)
                     .ids(reportMessage.counterId)
-                    .preset("sources_search_phrases")
+                    .dimensions("ym:s:directSearchPhrase")
+                    .metrics("ym:s:visits", "ym:s:pageDepth", "ym:s:avgVisitDurationSeconds", "ym:s:bounceRate")
                     .token(reportMessage.clientToken)
+                    .limit(10000)
+                    .date1(dateNow.toString())
+                    .date2(dateMonthAgo.toString())
                     .build();
         }
         throw new RuntimeException("can't create request because type doesn't not exist:" + reportMessage.reportType);
