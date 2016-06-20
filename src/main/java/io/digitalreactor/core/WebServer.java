@@ -1,6 +1,7 @@
 package io.digitalreactor.core;
 
 import io.digitalreactor.core.application.UserManagerAuthProvider;
+import io.digitalreactor.core.gateway.api.AdminApiController;
 import io.digitalreactor.core.gateway.api.ProjectApiController;
 import io.digitalreactor.core.gateway.web.ProjectController;
 import io.digitalreactor.core.gateway.web.RegistrationController;
@@ -51,6 +52,8 @@ public class WebServer extends AbstractVerticle {
         router.mountSubRouter("/project/", new ProjectController(vertx, engine).router());
 
         router.mountSubRouter("/api/v1/projects/", new ProjectApiController(vertx).router());
+        //TODO[St.maxim] only localhost
+        router.mountSubRouter("/api/admin/", new AdminApiController(vertx).router());
 
         router.route("/loginpage").handler(ctx -> {
             engine.render(ctx, "src/main/webapp/loginpage.hbs", res -> {

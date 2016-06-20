@@ -116,8 +116,8 @@
         type: 'get',
         dataType: 'json',
         success: function (summary) {
-            for (i = 0; i < summary.reprots.length; i++) {
-                reportResolver.resolve(summary.reprots[i], "#reports");
+            for (i = 0; i < summary.reports.length; i++) {
+                reportResolver.resolve(summary.reports[i], "#reports");
             }
         },
         xhrFields: {

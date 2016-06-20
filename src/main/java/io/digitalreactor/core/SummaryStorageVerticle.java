@@ -54,7 +54,7 @@ public class SummaryStorageVerticle extends ReactorAbstractVerticle {
 
         client.update(SUMMARIES_COLLECTION,
                 new JsonObject().put("_id", summaryId),
-                new JsonObject().put("$push", new JsonObject().put("reports", reportJson)),
+                new JsonObject().put("$push", new JsonObject().put("reports", new JsonObject(reportJson))),
                 result -> {
 
                 }

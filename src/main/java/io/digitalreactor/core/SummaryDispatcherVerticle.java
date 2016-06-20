@@ -6,6 +6,7 @@ import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.domain.messages.CreateSummaryMessage;
 import io.digitalreactor.core.domain.publishers.SummaryDispatcherPublisher;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -38,19 +39,27 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
                     String summaryId,
                     List<ReportTypeEnum> necessaryReports
             ) {
-                necessaryReports.forEach(reportTypeEnum -> {
-                    ReportMessage reportMessage = new ReportMessage();
-                    reportMessage.clientToken = counterId;
-                    reportMessage.summaryId = summaryId;
-                    reportMessage.counterId = counterId;
-                    reportMessage.reportType = reportTypeEnum;
 
-                    eventBus.publish(MetricsLoaderVerticle.LOAD_REPORT, fromObj(reportMessage));
+                eventBus.send(SummaryStorageVerticle.NEW, new JsonObject(), reply -> {
+                    if(reply.succeeded()) {
+                        String newSummaryId = ((JsonObject) reply.result().body()).getString("summaryId");
+                        necessaryReports.forEach(reportTypeEnum -> {
+                            ReportMessage reportMessage = new ReportMessage();
+                            reportMessage.clientToken = clientToken;
+                            reportMessage.summaryId = newSummaryId;
+                            reportMessage.counterId = counterId;
+                            reportMessage.reportType = reportTypeEnum;
+
+                            eventBus.publish(MetricsLoaderVerticle.LOAD_REPORT, fromObj(reportMessage));
+                        });
+                    }
                 });
+
             }
 
             @Override
             public void summaryWasCreated(String summaryId, List<String> callbackAddresses) {
+                System.out.println("Summary was created: " + summaryId);
                 //TODO[st.maxim] implementation
             }
         });

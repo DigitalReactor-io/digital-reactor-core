@@ -30,6 +30,7 @@ public class YandexApiImpl implements YandexApi {
                 new HttpClientOptions()
                         .setSsl(true)
                         .setVerifyHost(false)
+                        .setTrustAll(true)
         );
     }
 

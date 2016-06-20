@@ -31,7 +31,7 @@ public class MetricsLoaderVerticle extends ReactorAbstractVerticle {
                     })
                     .then(response -> {
                         message.raw = response;
-                        eventBus.publish(CREATE_REPORT, message);
+                        eventBus.publish(CREATE_REPORT, fromObj(message));
                     });
         });
     }
