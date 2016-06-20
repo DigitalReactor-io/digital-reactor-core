@@ -37,10 +37,11 @@ public class SummaryStorageVerticle extends ReactorAbstractVerticle {
     }
 
     private void createSummary(Message message) {
-        client.save(SUMMARIES_COLLECTION, new JsonObject(), result -> {
+        String summaryId = ((JsonObject) message.body()).getString("summaryId");
+        client.save(SUMMARIES_COLLECTION, new JsonObject().put("_id", summaryId), result -> {
             if (result.succeeded()) {
                 String id = result.result();
-                message.reply(new JsonObject().put("summaryId", id));
+                message.reply(new JsonObject().put("summaryId", summaryId));
             } else {
                 message.fail(0, result.cause().getMessage());
             }

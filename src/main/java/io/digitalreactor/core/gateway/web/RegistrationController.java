@@ -1,5 +1,6 @@
 package io.digitalreactor.core.gateway.web;
 
+import io.digitalreactor.core.SummaryDispatcherVerticle;
 import io.digitalreactor.core.UserManagerVerticle;
 import io.digitalreactor.core.api.yandex.YandexApi;
 import io.digitalreactor.core.api.yandex.YandexApiImpl;
@@ -161,8 +162,9 @@ public class RegistrationController {
                 .put("counterId", counterId)
                 .put("name", name);
 
-        eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, reply -> {
-            if (reply.succeeded()) {
+        eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, replyWithProjectId -> {
+            if (replyWithProjectId.succeeded()) {
+                eventBus.publish(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, replyWithProjectId.result().body());
                 routingContext.response().setStatusCode(201).end();
             } else {
                 routingContext.response().setStatusCode(500).end();

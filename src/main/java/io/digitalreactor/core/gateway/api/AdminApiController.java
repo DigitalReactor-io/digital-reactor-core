@@ -7,6 +7,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -26,6 +27,7 @@ public class AdminApiController {
         eventBus = vertx.eventBus();
         router = Router.router(vertx);
         router.route(HttpMethod.GET, "/createSummaryWithAllReport").handler(this::createSummaryWithAllReport);
+        router.route(HttpMethod.GET, "/createSummaryByProjectId").handler(this::createSummaryByProjectId);
     }
 
     public Router router() {
@@ -48,4 +50,14 @@ public class AdminApiController {
 
         routingContext.response().end(summaryId);
     }
+
+
+    public void createSummaryByProjectId(RoutingContext routingContext) {
+        String projectId = routingContext.request().getParam("projectId");
+
+        eventBus.send(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, new JsonObject().put("projectId", projectId));
+
+        routingContext.response().end("send");
+    }
+
 }
