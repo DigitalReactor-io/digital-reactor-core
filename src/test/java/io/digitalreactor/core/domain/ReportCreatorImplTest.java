@@ -8,6 +8,7 @@ import io.digitalreactor.core.gateway.api.dto.VisitsDuringMonthReportDto;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
 
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by flaidzeres on 12.06.2016.
  */
+@Ignore
 public class ReportCreatorImplTest {
 
     private final ReportCreator reportCreator = new ReportCreatorImpl();

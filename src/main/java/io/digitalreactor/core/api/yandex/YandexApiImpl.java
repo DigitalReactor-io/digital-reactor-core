@@ -5,6 +5,7 @@ import io.digitalreactor.core.api.yandex.model.Request;
 import io.digitalreactor.core.api.yandex.model.RequestCounters;
 import io.digitalreactor.core.api.yandex.model.Response;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
@@ -90,29 +91,12 @@ public class YandexApiImpl implements YandexApi {
     }
 
     @Override
-    public void requestAsJson(RequestCounters request, Handler<AsyncResult<JsonObject>> resultHandler) {
-        execute(request, buffer -> {
-            resultHandler.handle(new AsyncResult<JsonObject>() {
-                @Override
-                public JsonObject result() {
-                    return buffer.toJsonObject();
-                }
-
-                @Override
-                public Throwable cause() {
-                    return null;
-                }
-
-                @Override
-                public boolean succeeded() {
-                    return true;
-                }
-
-                @Override
-                public boolean failed() {
-                    return false;
-                }
-            });
+    public void requestAsJson(RequestCounters request, Future<JsonObject> resultHandler) {
+        execute(request, new Handler<Buffer>() {
+            @Override
+            public void handle(Buffer event) {
+                resultHandler.complete(event.toJsonObject());
+            }
         });
     }
 

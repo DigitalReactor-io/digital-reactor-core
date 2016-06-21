@@ -4,6 +4,7 @@ import io.digitalreactor.core.SummaryDispatcherVerticle;
 import io.digitalreactor.core.UserManagerVerticle;
 import io.digitalreactor.core.api.yandex.YandexApi;
 import io.digitalreactor.core.api.yandex.YandexApiImpl;
+import io.digitalreactor.core.api.yandex.model.AbstractRequest;
 import io.digitalreactor.core.api.yandex.model.RequestCounters;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
 import io.digitalreactor.core.promise.oncontext.Promise;
@@ -22,6 +23,8 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 
 import java.util.*;
+
+import static io.digitalreactor.core.api.yandex.model.AbstractRequest.COUNTETS;
 
 
 /**
@@ -112,10 +115,7 @@ public class RegistrationController {
 
                     Promise.onContext(vertx)
                             .when((Future<JsonObject> f) -> {
-                                yandexApi.requestAsJson(
-                                        RequestCounters.of().token(accessToken).build(),
-                                        f.completer()
-                                );
+                                yandexApi.requestAsJson(RequestCounters.of().prefix(COUNTETS).token(accessToken).build(), f);
                             })
                             .then(response -> {
                                 JsonArray counters = response.getJsonArray("counters");
@@ -164,7 +164,7 @@ public class RegistrationController {
 
         eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, replyWithProjectId -> {
             if (replyWithProjectId.succeeded()) {
-                eventBus.publish(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, replyWithProjectId.result().body());
+                eventBus.publish(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, new JsonObject().put("projectId", replyWithProjectId.result().body().toString()));
                 routingContext.response().setStatusCode(201).end();
             } else {
                 routingContext.response().setStatusCode(500).end();

@@ -4,11 +4,13 @@ import io.digitalreactor.core.domain.SummaryDispatcher;
 import io.digitalreactor.core.domain.ReportTypeEnum;
 import io.digitalreactor.core.domain.messages.ReportMessage;
 import io.digitalreactor.core.domain.messages.CreateSummaryMessage;
+import io.digitalreactor.core.domain.model.Project;
 import io.digitalreactor.core.domain.publishers.SummaryDispatcherPublisher;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,6 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
                     String summaryId,
                     List<ReportTypeEnum> necessaryReports
             ) {
-
                 eventBus.send(SummaryStorageVerticle.NEW, new JsonObject().put("summaryId", summaryId), reply -> {
                     if (reply.succeeded()) {
                         necessaryReports.forEach(reportTypeEnum -> {
@@ -66,20 +67,30 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
             @Override
             public void summaryWasCreated(String summaryId, List<String> callbackAddresses) {
                 System.out.println("Summary was created: " + summaryId);
-                //TODO[st.maxim] implementation
+                //TODO[st.maxim] very bad solution
+                String tokens[] = summaryId.split("_");
+
+                eventBus.publish(
+                        ProjectManagerVerticle.MARK_AS_COMPLETED,
+                        new JsonObject()
+                                .put("projectId", tokens[0])
+                                .put("summaryId", summaryId)
+                                .put("date", DateTime.now().toString())
+                );
             }
         });
     }
 
     private void createSummaryByProjectId(Message message) {
         String projectId = ((JsonObject) message.body()).getString("projectId");
+        vertx.eventBus().send(ProjectManagerVerticle.NEW_PROJECT, new JsonObject().put("id", projectId));
 
         vertx.eventBus().send(UserManagerVerticle.PROJECT_BY_ID, ((JsonObject) message.body()), reply -> {
             JsonObject param = ((JsonObject) reply.result().body());
             param.getLong("counterId");
             param.getString("token");
 
-            String summaryTextId = projectId + param.getLong("counterId") + UUID.randomUUID().toString();
+            String summaryTextId = projectId +"_"+ param.getLong("counterId") +"_"+ UUID.randomUUID().toString();
 
             List<ReportTypeEnum> requireReports = new ArrayList<>();
             requireReports.add(ReportTypeEnum.REFERRING_SOURCE);
@@ -94,6 +105,7 @@ public class SummaryDispatcherVerticle extends ReactorAbstractVerticle {
             );
 
             vertx.eventBus().publish(CREATE_SUMMARY, Json.encode(createSummaryMessage));
+            vertx.eventBus().send(ProjectManagerVerticle.MARK_AS_LOADING, new JsonObject().put("projectId", projectId).put("summaryId", summaryTextId));
         });
     }
 

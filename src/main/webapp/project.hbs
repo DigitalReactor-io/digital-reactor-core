@@ -108,7 +108,7 @@
 <script src="/js/reports/report-resolver.js" type="application/javascript"></script>
 <script>
 
-    var apiUrl = '/api/v1/projects/1/summary/actual';
+    var apiUrl = '/api/v1/projects/{{projectId}}/summary/actual';
     var reportResolver = new ReportResolver();
 
     $.ajax({

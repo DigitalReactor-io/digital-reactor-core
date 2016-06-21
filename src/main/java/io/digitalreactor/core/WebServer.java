@@ -66,13 +66,17 @@ public class WebServer extends AbstractVerticle {
         });
 
         router.get().handler(ctx -> {
-            engine.render(ctx, "src/main/webapp/index.hbs", res -> {
-                if (res.succeeded()) {
-                    ctx.response().end(res.result());
-                } else {
-                    ctx.fail(res.cause());
-                }
-            });
+            if(ctx.user() != null){
+                ctx.response().setStatusCode(302).putHeader("Location", "/project").end();
+            } else {
+                engine.render(ctx, "src/main/webapp/index.hbs", res -> {
+                    if (res.succeeded()) {
+                        ctx.response().end(res.result());
+                    } else {
+                        ctx.fail(res.cause());
+                    }
+                });
+            }
         });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(8080);

@@ -43,7 +43,7 @@ public class YandexApiTest {
                             .token(token)
                             .prefix(COUNTETS)
                             .build();
-                    yandexApi.requestAsJson(requestCounters, f.completer());
+                    yandexApi.requestAsJson(requestCounters, f);
                 })
                 .then(response -> {
                     System.out.println(response);

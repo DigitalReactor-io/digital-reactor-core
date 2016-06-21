@@ -4,6 +4,7 @@ import io.digitalreactor.core.api.yandex.model.Request;
 import io.digitalreactor.core.api.yandex.model.RequestCounters;
 import io.digitalreactor.core.api.yandex.model.Response;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
@@ -16,7 +17,7 @@ public interface YandexApi {
 
     void requestAsString(RequestCounters request, Handler<AsyncResult<String>> resultHandler);
 
-    void requestAsJson(RequestCounters request, Handler<AsyncResult<JsonObject>> resultHandler);
+    void requestAsJson(RequestCounters request,Future<JsonObject> resultHandler);
 
     void request(Request request, Handler<AsyncResult<Response>> resultHandler);
 

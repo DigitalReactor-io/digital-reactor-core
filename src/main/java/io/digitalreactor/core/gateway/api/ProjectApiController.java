@@ -64,7 +64,7 @@ public class ProjectApiController {
         eventBus.send(ProjectManagerVerticle.GET_BY_ID, new JsonObject().put("id", projectId), projectResult -> {
 
             if (projectResult.succeeded()) {
-                String summaryId = ((JsonObject) projectResult.result().body()).getJsonObject("status").getJsonObject("current").getString("summaryId");
+                String summaryId = ((JsonObject) projectResult.result().body()).getJsonObject("status").getJsonObject("current").getString("id");
 
                 eventBus.send(SummaryStorageVerticle.GET_BY_ID, new JsonObject().put("summaryId", summaryId), summaryResult -> {
                     if (summaryResult.succeeded()) {
