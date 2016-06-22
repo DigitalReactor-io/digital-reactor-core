@@ -11,5 +11,7 @@ public abstract class AbstractRequest {
 
     public static final String COUNTETS = "/management/v1/counters?";
 
+    public static final String GOALS = "/management/v1/counter/";
+
     public abstract String toQuery();
 }

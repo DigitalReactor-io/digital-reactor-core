@@ -54,6 +54,8 @@ public class RequestBuilder {
                     .metrics("ym:s:visits", "ym:s:pageDepth", "ym:s:avgVisitDurationSeconds", "ym:s:bounceRate")
                     .token(reportMessage.clientToken)
                     .limit(10000)
+                    //TODO[st.maxim] One year only for test, because a counter very often have not data for calculation
+                    .date1(toDay.minusYears(1).toString())
                     .build();
         }
         throw new RuntimeException("can't create request because type doesn't not exist:" + reportMessage.reportType);
