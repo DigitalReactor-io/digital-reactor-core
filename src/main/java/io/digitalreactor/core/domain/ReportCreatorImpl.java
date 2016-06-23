@@ -42,11 +42,17 @@ public class ReportCreatorImpl implements ReportCreator {
             List<Integer> visits = metrics.stream().map(aDouble -> aDouble.intValue()).collect(Collectors.toList());
 
             final int count = metrics.stream().mapToInt(Double::intValue).sum();
+            int visitChange = 0;
+            List<List<Double>> twoCalendarWeek = chooseValueOfWeekAndLastWeek(metrics, LocalDate.parse(date2));
 
-          //  List<List<Double>> twoCalendarWeek = chooseValueOfWeekAndLastWeek(metrics, LocalDate.parse(date2));
+            if (!twoCalendarWeek.isEmpty()) {
+                double sumWeek1 = twoCalendarWeek.get(0).stream().mapToDouble(x -> x).sum();
+                double sumWeek2 = twoCalendarWeek.get(1).stream().mapToDouble(x -> x).sum();
+                visitChange = (int) (sumWeek1 - sumWeek2);
+            }
 
             final ReferringSourceDto referringSourceDto = new ReferringSourceDto(
-                    name, count, 0, 0, 0, 0, 0,
+                    name, count, visitChange, 0, 0, 0, 0,
                     VisitsDuringMonthReportDto.visitsListWithDay(visits, LocalDate.parse(date1))
             );
             sources.add(referringSourceDto);
