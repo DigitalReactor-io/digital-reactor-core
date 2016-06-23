@@ -27,9 +27,9 @@
                     <tbody>
                     {{#each successPhrases}}
                         <tr>
-                            <th scope="row">{{this.phrase}}</th>
-                            <td>{{this.visit}}</td>
-                            <td>{{this.refusals}}</td>
+                            <td>{{this.phrase}}</td>
+                            <td>{{this.visits}}</td>
+                            <td>{{this.bounceRate}}</td>
                             <td>{{this.viewDepth}}</td>
                             <td>{{this.timeOnSite.hour}}:{{this.timeOnSite.minute}}:{{this.timeOnSite.second}}</td>
                             <td>{{this.conversion}}</td>
@@ -55,11 +55,11 @@
                     <tbody>
                     {{#each failurePhrases}}
                         <tr>
-                            <th scope="row">{{this.phrase}}</th>
-                            <td>{{this.visit}}</td>
-                            <td>{{this.refusals}}</td>
+                            <th>{{this.phrase}}</th>
+                            <td>{{this.visits}}</td>
+                            <td>{{this.bounceRate}}</td>
                             <td>{{this.viewDepth}}</td>
-                            <td>{{this.timeOnSite.hour}}:{{this.timeOnSite.minute}}:{{this.timeOnSite.second}}</td>
+                            <td>{{this.timeOnSite}}</td>
                             <td>{{this.conversion}}</td>
                         </tr>
                     {{/each}}

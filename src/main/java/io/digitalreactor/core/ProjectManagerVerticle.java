@@ -47,7 +47,12 @@ public class ProjectManagerVerticle extends AbstractVerticle {
 
         client.find(PROJECTS_COLLECTION, new JsonObject().put("_id", projectId), res -> {
             if (res.succeeded()) {
-                JsonObject summary = res.result().get(0);
+                JsonObject summary = null;
+                if(res.result().isEmpty()){
+                    summary = new JsonObject();
+                } else {
+                    summary = res.result().get(0);
+                }
 
                 message.reply(summary);
             } else {

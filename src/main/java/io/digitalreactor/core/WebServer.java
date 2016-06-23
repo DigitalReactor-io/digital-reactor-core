@@ -35,7 +35,7 @@ public class WebServer extends AbstractVerticle {
         router.route("/project/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
         router.route("/api/v1/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
 
-        router.route("/logon").handler(FormLoginHandler.create(authProvider));
+        router.route("/logon").handler(FormLoginHandler.create(authProvider).setDirectLoggedInOKURL("/project"));
 
         router.route("/logout").handler(context -> {
             context.clearUser();

@@ -13,10 +13,10 @@ public class SearchPhraseDto {
     private double timeOnSite;
     private double conversion;
 
-    public SearchPhraseDto(String phrase, int visits, double refusals, double viewDepth, double timeOnSite, double conversion) {
+    public SearchPhraseDto(String phrase, int visits, double bounceRate, double viewDepth, double timeOnSite, double conversion) {
         this.phrase = phrase;
         this.visits = visits;
-        this.bounceRate = refusals;
+        this.bounceRate = bounceRate;
         this.viewDepth = viewDepth;
         this.timeOnSite = timeOnSite;
         this.conversion = conversion;

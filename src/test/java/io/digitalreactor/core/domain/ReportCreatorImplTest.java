@@ -14,8 +14,12 @@ import org.unitils.reflectionassert.ReflectionAssert;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -74,6 +78,20 @@ public class ReportCreatorImplTest {
         SearchPhraseYandexDirectDto searchPhraseYandexReport = reportCreator.createSearchPhraseYandexReport(message);
 
         assertThat(searchPhraseYandexReport, is(equalTo(null)));
+    }
+
+    @Test
+    public void chooseValueOfWeekAndLastWeek_fullSequence_twoSubSequenceByCalendarWeek() {
+        List<Double> metrics = Arrays.asList(1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15.);
+        List<Double> secondWeek = Arrays.asList(1., 2., 3., 4., 5., 6., 7.);
+        List<Double> firstWeek = Arrays.asList(8., 9., 10., 11., 12., 13., 14.);
+        String date = "2016-06-20";
+
+        List<List<Double>> twoWeek = ((ReportCreatorImpl) reportCreator).chooseValueOfWeekAndLastWeek(metrics, LocalDate.parse(date));
+
+        assertThat(twoWeek.size(), is(equalTo(2)));
+        assertThat(twoWeek.get(0), is(equalTo(secondWeek)));
+        assertThat(twoWeek.get(1), is(equalTo(firstWeek)));
     }
 
     @After
