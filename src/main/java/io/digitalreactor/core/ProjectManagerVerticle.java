@@ -47,7 +47,12 @@ public class ProjectManagerVerticle extends AbstractVerticle {
 
         client.find(PROJECTS_COLLECTION, new JsonObject().put("_id", projectId), res -> {
             if (res.succeeded()) {
-                JsonObject summary = res.result().get(0);
+                JsonObject summary = null;
+                if(res.result().isEmpty()){
+                    summary = new JsonObject();
+                } else {
+                    summary = res.result().get(0);
+                }
 
                 message.reply(summary);
             } else {
@@ -57,7 +62,7 @@ public class ProjectManagerVerticle extends AbstractVerticle {
     }
 
     private void markSummaryAsCompleted(Message message) {
-        int projectId = ((JsonObject) message.body()).getInteger("projectId");
+        int projectId = Integer.valueOf(((JsonObject) message.body()).getString("projectId"));
         String summaryId = ((JsonObject) message.body()).getString("summaryId");
         String dateCompleted = ((JsonObject) message.body()).getString("date");
         SummaryShort summaryShort = new SummaryShort(summaryId, dateCompleted);
@@ -66,8 +71,8 @@ public class ProjectManagerVerticle extends AbstractVerticle {
                 PROJECTS_COLLECTION,
                 new JsonObject().put("_id", projectId),
                 new JsonObject()
-                        .put("$set", new JsonObject().put("status", Json.encode(new ProjectStatus(ProjectStatus.ProjectType.COMPLETED, summaryShort))))
-                        .put("$push", new JsonObject().put("history", summaryShort)),
+                        .put("$set", new JsonObject().put("status", new JsonObject(Json.encode(new ProjectStatus(ProjectStatus.ProjectType.COMPLETED, summaryShort)))))
+                        .put("$push", new JsonObject().put("history", new JsonObject(Json.encode(summaryShort)))),
                 result -> {
                     if (result.failed()) {
                         message.fail(0, result.cause().getMessage());
@@ -77,7 +82,7 @@ public class ProjectManagerVerticle extends AbstractVerticle {
     }
 
     private void markAsLoadingSummary(Message message) {
-        int projectId = ((JsonObject) message.body()).getInteger("projectId");
+        int projectId = Integer.valueOf(((JsonObject) message.body()).getString("projectId"));
         String summaryId = ((JsonObject) message.body()).getString("summaryId");
 
         client.update(
@@ -93,7 +98,7 @@ public class ProjectManagerVerticle extends AbstractVerticle {
     }
 
     private void createNewProject(Message message) {
-        int externalProjectId = ((JsonObject) message.body()).getInteger("id");
+        int externalProjectId = Integer.valueOf(((JsonObject) message.body()).getString("id"));
         Project createNewProject = new Project(externalProjectId);
 
         client.save(PROJECTS_COLLECTION, new JsonObject(Json.encode(createNewProject)), result -> {

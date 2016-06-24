@@ -40,6 +40,7 @@ public class ProjectController {
     }
 
     private void project(RoutingContext routingContext) {
+        routingContext.put("projectId", routingContext.request().getParam("id"));
         engine.render(routingContext, "src/main/webapp/project.hbs", res -> {
             if (res.succeeded()) {
                 routingContext.response().end(res.result());

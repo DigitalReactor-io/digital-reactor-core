@@ -1,17 +1,28 @@
 package io.digitalreactor.core.api.yandex;
 
-import java.util.function.Consumer;
+import io.digitalreactor.core.api.yandex.model.Request;
+import io.digitalreactor.core.api.yandex.model.RequestCounters;
+import io.digitalreactor.core.api.yandex.model.Response;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonObject;
 
 /**
  * Created by FlaIDzeres on 23.04.2016.
  */
 public interface YandexApi {
 
-    String tables(RequestTable requestTable, String token);
+    void request(RequestCounters request, Handler<AsyncResult<Response>> resultHandler);
 
-    void tables(RequestTable requestTable, String token, Consumer<String> consumer);
+    void requestAsString(RequestCounters request, Handler<AsyncResult<String>> resultHandler);
 
-    String counters(RequestCounterList requestCounterList, String token);
+    void requestAsJson(RequestCounters request,Future<JsonObject> resultHandler);
 
-    void counters(RequestCounterList requestCounterList, String token, Consumer<String> consumer);
+    void request(Request request, Handler<AsyncResult<Response>> resultHandler);
+
+    void requestAsString(Request request, Handler<AsyncResult<String>> resultHandler);
+
+    void requestAsJson(Request request, Handler<AsyncResult<JsonObject>> resultHandler);
+
 }

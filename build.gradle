@@ -35,14 +35,18 @@ dependencies {
     compile 'io.vertx:vertx-unit:3.2.1'
     compile 'org.hsqldb:hsqldb:2.3.3'
     compile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'commons-collections:commons-collections:3.2.2'
     compile 'io.vertx:vertx-mysql-postgresql-client:3.2.1'
     compile 'io.fastjson:boon:0.33'
     compile 'io.vertx:vertx-mongo-client:3.2.1'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-collections:commons-collections:3.2.2'
 
+    testCompile 'commons-collections:commons-collections:3.2.2'
+    testCompile 'commons-io:commons-io:2.4'
     testCompile group: 'log4j', name: 'log4j', version: '1.2.17'
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile 'io.vertx:vertx-unit:3.2.1'
     testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.unitils:unitils-core:3.4.2'
+
 }

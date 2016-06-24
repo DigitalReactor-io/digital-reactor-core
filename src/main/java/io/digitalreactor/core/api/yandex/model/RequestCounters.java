@@ -1,13 +1,11 @@
-package io.digitalreactor.core.api.yandex;
+package io.digitalreactor.core.api.yandex.model;
 
-import io.digitalreactor.core.api.yandex.counter.Status;
-import io.digitalreactor.core.api.yandex.counter.Type;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by flaidzeres on 30.04.16.
+ * Created by flaidzeres on 12.06.2016.
  */
-public class RequestCounterList implements Request {
+public class RequestCounters extends AbstractRequest {
     private Boolean favorite;
     private String field;
     private Integer labelId;
@@ -18,20 +16,10 @@ public class RequestCounterList implements Request {
     private String searchString;
     private Status status;
     private Type type;
+    private String token;
+    private String prefix;
 
-    private String PREFIX = "/management/v1/counters?";
-
-    public RequestCounterList(Builder builder) {
-        this.favorite = builder.favorite;
-        this.field = builder.field;
-        this.labelId = builder.labelId;
-        this.offset = builder.offset;
-        this.perPage = builder.perPage;
-        this.permission = builder.permission;
-        this.reverse = builder.reverse;
-        this.searchString = builder.searchString;
-        this.status = builder.status;
-        this.type = builder.type;
+    private RequestCounters() {
     }
 
     public Boolean getFavorite() {
@@ -74,9 +62,14 @@ public class RequestCounterList implements Request {
         return type;
     }
 
+    public String getToken() {
+        return token;
+    }
+
     @Override
     public String toQuery() {
         final StringBuilder builder = new StringBuilder();
+        builder.append(prefix);
         if (favorite != null) {
             int f = 0;
             if (favorite) {
@@ -108,86 +101,82 @@ public class RequestCounterList implements Request {
         if (StringUtils.isNotEmpty(searchString)) {
             builder.append("&search_string=").append(searchString);
         }
-
-        // TODO: 30.04.16  complete all field
+        if (StringUtils.isNoneEmpty(token)) {
+            builder.append("&oauth_token=").append(token);
+        }
 
         return builder.toString();
     }
 
-    @Override
-    public String prefix() {
-        return PREFIX;
-    }
-
-    public static RequestCounterList.Builder of() {
-        return new RequestCounterList.Builder();
+    public static Builder of() {
+        return new Builder();
     }
 
     public static class Builder {
-        private Boolean favorite;
-        private String field;
-        private Integer labelId;
-        private Integer offset;
-        private Integer perPage;
-        private String permission;
-        private Boolean reverse;
-        private String searchString;
-        private Status status;
-        private Type type;
+        private RequestCounters requestCounters = new RequestCounters();
+
+        public Builder prefix(String prefix) {
+            requestCounters.prefix = prefix;
+            return this;
+        }
+
+        public Builder token(String token) {
+            requestCounters.token = token;
+            return this;
+        }
 
         public Builder favorite(Boolean favorite) {
-            this.favorite = favorite;
+            requestCounters.favorite = favorite;
             return this;
         }
 
         public Builder field(String field) {
-            this.field = field;
+            requestCounters.field = field;
             return this;
         }
 
         public Builder labelId(Integer labelId) {
-            this.labelId = labelId;
+            requestCounters.labelId = labelId;
             return this;
         }
 
         public Builder offset(Integer offset) {
-            this.offset = offset;
+            requestCounters.offset = offset;
             return this;
         }
 
         public Builder perPage(Integer perPage) {
-            this.perPage = perPage;
+            requestCounters.perPage = perPage;
             return this;
         }
 
         public Builder permission(String permission) {
-            this.permission = permission;
+            requestCounters.permission = permission;
             return this;
         }
 
         public Builder reverse(Boolean reverse) {
-            this.reverse = reverse;
+            requestCounters.reverse = reverse;
             return this;
         }
 
         public Builder searchString(String searchString) {
-            this.searchString = searchString;
+            requestCounters.searchString = searchString;
             return this;
         }
 
-
         public Builder status(Status status) {
-            this.status = status;
+            requestCounters.status = status;
             return this;
         }
 
         public Builder type(Type type) {
-            this.type = type;
+            requestCounters.type = type;
             return this;
         }
 
-        public RequestCounterList build() {
-            return new RequestCounterList(this);
+        public RequestCounters build() {
+            return requestCounters;
         }
     }
 

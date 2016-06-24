@@ -108,7 +108,7 @@
 <script src="/js/reports/report-resolver.js" type="application/javascript"></script>
 <script>
 
-    var apiUrl = '/api/v1/projects/1/summary/actual';
+    var apiUrl = '/api/v1/projects/{{projectId}}/summary/actual';
     var reportResolver = new ReportResolver();
 
     $.ajax({
@@ -116,8 +116,8 @@
         type: 'get',
         dataType: 'json',
         success: function (summary) {
-            for (i = 0; i < summary.reprots.length; i++) {
-                reportResolver.resolve(summary.reprots[i], "#reports");
+            for (i = 0; i < summary.reports.length; i++) {
+                reportResolver.resolve(summary.reports[i], "#reports");
             }
         },
         xhrFields: {

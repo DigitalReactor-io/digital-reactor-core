@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by ingvard on 02.05.16.
@@ -27,6 +28,7 @@ public class UserManagerVerticle extends AbstractVerticle {
     private final static String BASE_USER_MANAGER = "digitalreactor.core.user.";
     public final static String NEW_USER = BASE_USER_MANAGER + "new";
     public final static String AUTHENTICATE = BASE_USER_MANAGER + "authenticate";
+    public final static String PROJECT_BY_ID = BASE_USER_MANAGER + "project_by_id";
 
     private final String USER_TABLE = "users";
     private final String PROJECT_TABLE = "projects";
@@ -59,12 +61,14 @@ public class UserManagerVerticle extends AbstractVerticle {
                 .put("port", 5432)
                 .put("username", "skdqqjmf")
                 .put("password", "OQ2JEategLWNQzfl9sNY-duW7x6N4WY0")
-                .put("database", "skdqqjmf");
+                .put("database", "skdqqjmf")
+                .put("maxPoolSize", 1);
 
         postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);
 
         eventBus.consumer(NEW_USER, this::newUser);
         eventBus.consumer(AUTHENTICATE, this::authenticate);
+        eventBus.consumer(PROJECT_BY_ID, this::getProjectById);
     }
 
     @Override
@@ -192,6 +196,34 @@ public class UserManagerVerticle extends AbstractVerticle {
             }
         }
 
+    }
+
+    private void getProjectById(Message message) {
+        String query = "SELECT token, counter_id FROM " + PROJECT_TABLE + " AS p, " + ACCESS_TABLE + " AS a " +
+                "WHERE p.access_id = a.id AND p.id=?";
+
+        String projectId = ((JsonObject) message.body()).getString("projectId");
+
+        postgreSQLClient.getConnection(res -> {
+            if (res.succeeded()) {
+                SQLConnection connection = res.result();
+
+                connection.queryWithParams(query, new JsonArray().add(projectId), result -> {
+                    if (result.succeeded()) {
+                        ResultSet result1 = result.result();
+                        List<JsonArray> results = result1.getResults();
+
+                        if (results.size() == 1) {
+                            message.reply(new JsonObject().put("token", results.get(0).getString(0)).put("counterId", results.get(0).getLong(1)));
+                        } else {
+                            message.fail(1, "");
+                        }
+                    }
+                });
+
+                //   connection.close();
+            }
+        });
     }
 
     private String passwordHash(String password, String salt) {

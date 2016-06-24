@@ -1,6 +1,7 @@
 package io.digitalreactor.core;
 
 import io.digitalreactor.core.application.UserManagerAuthProvider;
+import io.digitalreactor.core.gateway.api.AdminApiController;
 import io.digitalreactor.core.gateway.api.ProjectApiController;
 import io.digitalreactor.core.gateway.web.ProjectController;
 import io.digitalreactor.core.gateway.web.RegistrationController;
@@ -34,7 +35,7 @@ public class WebServer extends AbstractVerticle {
         router.route("/project/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
         router.route("/api/v1/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage"));
 
-        router.route("/logon").handler(FormLoginHandler.create(authProvider));
+        router.route("/logon").handler(FormLoginHandler.create(authProvider).setDirectLoggedInOKURL("/project"));
 
         router.route("/logout").handler(context -> {
             context.clearUser();
@@ -51,6 +52,8 @@ public class WebServer extends AbstractVerticle {
         router.mountSubRouter("/project/", new ProjectController(vertx, engine).router());
 
         router.mountSubRouter("/api/v1/projects/", new ProjectApiController(vertx).router());
+        //TODO[St.maxim] only localhost
+        router.mountSubRouter("/api/admin/", new AdminApiController(vertx).router());
 
         router.route("/loginpage").handler(ctx -> {
             engine.render(ctx, "src/main/webapp/loginpage.hbs", res -> {
@@ -63,13 +66,17 @@ public class WebServer extends AbstractVerticle {
         });
 
         router.get().handler(ctx -> {
-            engine.render(ctx, "src/main/webapp/index.hbs", res -> {
-                if (res.succeeded()) {
-                    ctx.response().end(res.result());
-                } else {
-                    ctx.fail(res.cause());
-                }
-            });
+            if(ctx.user() != null){
+                ctx.response().setStatusCode(302).putHeader("Location", "/project").end();
+            } else {
+                engine.render(ctx, "src/main/webapp/index.hbs", res -> {
+                    if (res.succeeded()) {
+                        ctx.response().end(res.result());
+                    } else {
+                        ctx.fail(res.cause());
+                    }
+                });
+            }
         });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(8080);

@@ -1,10 +1,14 @@
 package io.digitalreactor.core.gateway.web;
 
+import io.digitalreactor.core.SummaryDispatcherVerticle;
 import io.digitalreactor.core.UserManagerVerticle;
-import io.digitalreactor.core.api.yandex.RequestCounterList;
 import io.digitalreactor.core.api.yandex.YandexApi;
 import io.digitalreactor.core.api.yandex.YandexApiImpl;
+import io.digitalreactor.core.api.yandex.model.AbstractRequest;
+import io.digitalreactor.core.api.yandex.model.RequestCounters;
 import io.digitalreactor.core.gateway.web.dto.CounterShortDto;
+import io.digitalreactor.core.promise.oncontext.Promise;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -19,6 +23,8 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 
 import java.util.*;
+
+import static io.digitalreactor.core.api.yandex.model.AbstractRequest.COUNTETS;
 
 
 /**
@@ -106,29 +112,32 @@ public class RegistrationController {
                     temporaryTokenStorage.put(tokenCode, accessToken);
 
                     YandexApi yandexApi = new YandexApiImpl(vertx);
-                    yandexApi.counters(RequestCounterList.of().build(), accessToken, countersResponse -> {
-                        JsonArray counters = new JsonObject(countersResponse).getJsonArray("counters");
-                        List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
-                        for (Object counter : counters) {
-                            Long id = ((JsonObject) counter).getLong("id");
-                            String name = ((JsonObject) counter).getString("name");
+                    Promise.onContext(vertx)
+                            .when((Future<JsonObject> f) -> {
+                                yandexApi.requestAsJson(RequestCounters.of().prefix(COUNTETS).token(accessToken).build(), f);
+                            })
+                            .then(response -> {
+                                JsonArray counters = response.getJsonArray("counters");
+                                List<CounterShortDto> countersDto = new ArrayList<CounterShortDto>();
 
-                            countersDto.add(new CounterShortDto(id, name));
-                        }
+                                for (Object counter : counters) {
+                                    Long id = ((JsonObject) counter).getLong("id");
+                                    String name = ((JsonObject) counter).getString("name");
 
-                        routingContext.put("counters", countersDto);
+                                    countersDto.add(new CounterShortDto(id, name));
+                                }
 
-                        engine.render(routingContext, "src/main/webapp/registration-step-3.hbs", res -> {
-                            if (res.succeeded()) {
-                                routingContext.response().end(res.result());
-                            } else {
-                                routingContext.fail(res.cause());
-                            }
-                        });
+                                routingContext.put("counters", countersDto);
 
-                    });
-
+                                engine.render(routingContext, "src/main/webapp/registration-step-3.hbs", res -> {
+                                    if (res.succeeded()) {
+                                        routingContext.response().end(res.result());
+                                    } else {
+                                        routingContext.fail(res.cause());
+                                    }
+                                });
+                            });
                 }
             });
 
@@ -153,8 +162,9 @@ public class RegistrationController {
                 .put("counterId", counterId)
                 .put("name", name);
 
-        eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, reply -> {
-            if (reply.succeeded()) {
+        eventBus.send(UserManagerVerticle.NEW_USER, createNewUserObj, replyWithProjectId -> {
+            if (replyWithProjectId.succeeded()) {
+                eventBus.publish(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, new JsonObject().put("projectId", replyWithProjectId.result().body().toString()));
                 routingContext.response().setStatusCode(201).end();
             } else {
                 routingContext.response().setStatusCode(500).end();

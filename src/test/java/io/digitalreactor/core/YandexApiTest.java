@@ -1,17 +1,24 @@
 package io.digitalreactor.core;
 
-import io.digitalreactor.core.api.yandex.RequestCounterList;
-import io.digitalreactor.core.api.yandex.RequestTable;
 import io.digitalreactor.core.api.yandex.YandexApi;
 import io.digitalreactor.core.api.yandex.YandexApiImpl;
-import io.vertx.core.Vertx;
+import io.digitalreactor.core.api.yandex.model.Request;
+import io.digitalreactor.core.api.yandex.model.RequestCounters;
+import io.digitalreactor.core.api.yandex.model.Response;
+import io.digitalreactor.core.promise.oncontext.Promise;
+import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.RunTestOnContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static io.digitalreactor.core.api.yandex.model.AbstractRequest.COUNTETS;
+import static io.digitalreactor.core.api.yandex.model.AbstractRequest.DATA;
+import static io.digitalreactor.core.api.yandex.model.AbstractRequest.DATA_BY_TYPE;
 
 /**
  * Created by FlaIDzeres on 23.04.2016.
@@ -19,61 +26,115 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class YandexApiTest {
 
-    private String token = "ARRC9_4AAr_pqwmAhZwJQMWm2OAqi47ewg";
+    private String token = "ARRC9_4AAr_pAYPQUd4tTruTtGS8ouTlHg";
 
-    private YandexApi yandexApi = new YandexApiImpl(Vertx.vertx());
+    @Rule
+    public RunTestOnContext rule = new RunTestOnContext();
 
     @Test
-    public void tables_async(TestContext context) {
+    public void request_allCounters_counters(TestContext context) {
+        YandexApi yandexApi = new YandexApiImpl(rule.vertx());
+
         Async async = context.async();
 
-        RequestTable requestTable = RequestTable.of()
-                .ids("31424723", "29235010")
-                .metrics("ym:s:visits")
-                .pretty(true)
-                .build();
-
-        yandexApi.tables(requestTable, token, result -> {
-            Assert.assertTrue(StringUtils.isNotEmpty(result));
-            System.out.println(result);
-            async.complete();
-        });
+        Promise.onContext(rule.vertx())
+                .when((Future<JsonObject> f) -> {
+                    RequestCounters requestCounters = RequestCounters.of()
+                            .token(token)
+                            .prefix(COUNTETS)
+                            .build();
+                    yandexApi.requestAsJson(requestCounters, f);
+                })
+                .then(response -> {
+                    System.out.println(response);
+                    context.assertNotNull(response);
+                    async.complete();
+                });
     }
 
-    @Test
-    public void tables_blocking() {
-        RequestTable requestTable = RequestTable.of()
-                .ids("31424723", "29235010")
-                .metrics("ym:s:visits")
-                .pretty(true)
-                .build();
-
-        String result = yandexApi.tables(requestTable, token);
-
-        Assert.assertTrue(StringUtils.isNotEmpty(result));
-
-        System.out.println(result);
-    }
 
     @Test
-    public void get_counters_list_async(TestContext context) {
+    public void request_visits_visitsDuringMonth(TestContext context) {
+        YandexApi yandexApi = new YandexApiImpl(rule.vertx());
+
         Async async = context.async();
 
-        yandexApi.counters(RequestCounterList.of().build(), token, result -> {
-            Assert.assertTrue(StringUtils.isNotEmpty(result));
-            System.out.println(result);
-            async.complete();
-        });
+        Promise.onContext(rule.vertx())
+                .when((Future<JsonObject> f) -> {
+                    Request request = Request.of()
+                            .prefix(DATA_BY_TYPE)
+                            .ids("29235010")
+                            .metrics("ym:s:visits")
+                            .date1("2015-01-01")
+                            .date2("2015-01-28")
+                            .group("day")
+                            .pretty(true)
+                            .token(token)
+                            .build();
+
+                    yandexApi.requestAsJson(request, f.completer());
+                })
+                .then(response -> {
+                    System.out.println(response);
+                    context.assertNotNull(response);
+                    async.complete();
+                });
     }
 
     @Test
-    public void get_counters_list_blocking() {
-        String result = yandexApi.counters(RequestCounterList.of().build(), token);
+    public void request_filterByTrafficSource_referenceSourcesDuringMonth(TestContext context) {
+        YandexApi yandexApi = new YandexApiImpl(rule.vertx());
 
-        Assert.assertTrue(StringUtils.isNotEmpty(result));
+        Async async = context.async();
 
-        System.out.println(result);
+        Promise.onContext(rule.vertx())
+                .when((Future<JsonObject> f) -> {
+                    Request request = Request.of()
+                            .prefix(DATA_BY_TYPE)
+                            .ids("29235010")
+                            .metrics("ym:s:visits")
+                            .date1("2015-06-01")
+                            .date2("2015-06-28")
+                            .group("day")
+                            .dimensions("ym:s:<attribution>TrafficSource")
+                            .attribution("last")
+                            .pretty(true)
+                            .token(token)
+                            .build();
+
+                    yandexApi.requestAsJson(request, f.completer());
+                })
+                .then(response -> {
+                    System.out.println(response);
+                    context.assertNotNull(response);
+                    async.complete();
+                });
     }
 
+    @Test
+    public void request_searchPhrase_searchPhraseDuringMonth(TestContext context) {
+        YandexApi yandexApi = new YandexApiImpl(rule.vertx());
+
+        Async async = context.async();
+
+        Promise.onContext(rule.vertx())
+                .when((Future<JsonObject> f) -> {
+                    Request request = Request.of()
+                            .prefix(DATA)
+                            .ids("29235010")
+                            .preset("sources_search_phrases")
+                            .date1("2015-06-01")
+                            .date2("2015-06-28")
+                            .token(token)
+                            .build();
+
+                    yandexApi.requestAsJson(request, f.completer());
+                })
+                .then(response -> {
+                    System.out.println(response);
+                    context.assertNotNull(response);
+                    async.complete();
+                });
+    }
 
 }

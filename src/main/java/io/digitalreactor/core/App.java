@@ -16,10 +16,14 @@ public class App {
         UserManagerVerticle userManagerVerticle = new UserManagerVerticle();
         SummaryStorageVerticle summeryStorageVerticle = new SummaryStorageVerticle();
         ProjectManagerVerticle projectManagerVerticle = new ProjectManagerVerticle();
+        MetricsLoaderVerticle metricsLoaderVerticle = new MetricsLoaderVerticle();
+        ReportCreatorVerticle reportCreatorVerticle = new ReportCreatorVerticle();
 
         vertx.deployVerticle(projectManagerVerticle);
         vertx.deployVerticle(summeryStorageVerticle);
         vertx.deployVerticle(summaryDispatcherVerticle);
+        vertx.deployVerticle(metricsLoaderVerticle);
+        vertx.deployVerticle(reportCreatorVerticle);
         vertx.deployVerticle(userManagerVerticle);
         vertx.deployVerticle(restController, deploymentOptions);
     }

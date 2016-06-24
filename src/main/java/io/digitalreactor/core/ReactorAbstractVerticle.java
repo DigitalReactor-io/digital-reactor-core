@@ -9,7 +9,7 @@ import org.boon.json.ObjectMapper;
  */
 public abstract class ReactorAbstractVerticle extends AbstractVerticle {
 
-    private final ObjectMapper mapper = JsonFactory.create();
+    protected final ObjectMapper mapper = JsonFactory.create();
 
     protected <T> T toObj(String json, Class<T> tClass) {
         return mapper.fromJson(json, tClass);
