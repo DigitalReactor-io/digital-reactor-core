@@ -1,5 +1,6 @@
 package io.digitalreactor.core;
 
+import io.digitalreactor.core.application.Service.EmailService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.VertxException;
@@ -13,9 +14,11 @@ import io.vertx.ext.auth.jdbc.impl.JDBCUser;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -48,8 +51,14 @@ public class UserManagerVerticle extends AbstractVerticle {
     private final int EMAIL_POSITION_IN_TABLE = 1;
     private final int PASSWORD_POSITION_IN_TABLE = 2;
 
+    private SecureRandom random = new SecureRandom();
+
     //TODO[St.maxim] to env
+    //TODO new i found new solution in spring security with random salt
     private final String salt = "zScs23fs";
+
+    //TODO[St.maxim] make as DI
+    private EmailService emailService;
 
     @Override
     public void start() throws Exception {
@@ -63,6 +72,8 @@ public class UserManagerVerticle extends AbstractVerticle {
                 .put("password", "OQ2JEategLWNQzfl9sNY-duW7x6N4WY0")
                 .put("database", "skdqqjmf")
                 .put("maxPoolSize", 1);
+
+        this.emailService = new EmailService(vertx, "digitalreactor@yandex.ru");
 
         postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);
 
@@ -85,7 +96,8 @@ public class UserManagerVerticle extends AbstractVerticle {
         String name = newUserJson.getString("name");
         Long counterId = Long.valueOf(newUserJson.getString("counterId"));
 
-        String password = passwordHash("123456", salt);
+        String password = passwordGenerator();
+        String passwordHash = passwordHash(password, salt);
 
         postgreSQLClient.getConnection(res -> {
             if (res.succeeded()) {
@@ -94,7 +106,7 @@ public class UserManagerVerticle extends AbstractVerticle {
 
                 //TODO[St.maxim] callback hell
                 connection.queryWithParams(insertUser,
-                        new JsonArray().add(email).add(password).add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))),
+                        new JsonArray().add(email).add(passwordHash).add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))),
                         userInsertResult -> {
                             if (userInsertResult.succeeded()) {
                                 int userId = userInsertResult.result().getResults().get(0).getInteger(0);
@@ -112,6 +124,8 @@ public class UserManagerVerticle extends AbstractVerticle {
                                                                 int projectId = projectInsertResult.result().getResults().get(0).getInteger(0);
 
                                                                 newUserMessage.reply(projectId);
+                                                                emailService.newUserMessage(email, password);
+
                                                             } else {
                                                                 newUserMessage.fail(0, projectInsertResult.cause().getMessage());
                                                             }
@@ -224,6 +238,10 @@ public class UserManagerVerticle extends AbstractVerticle {
                 //   connection.close();
             }
         });
+    }
+
+    private String passwordGenerator() {
+        return new BigInteger(8, random).toString(32);
     }
 
     private String passwordHash(String password, String salt) {
