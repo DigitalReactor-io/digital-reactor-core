@@ -241,7 +241,7 @@ public class UserManagerVerticle extends AbstractVerticle {
     }
 
     private String passwordGenerator() {
-        return new BigInteger(8, random).toString(32);
+        return new BigInteger(43, random).toString(32);
     }
 
     private String passwordHash(String password, String salt) {
