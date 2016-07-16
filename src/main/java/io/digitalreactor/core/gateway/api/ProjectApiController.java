@@ -1,6 +1,7 @@
 package io.digitalreactor.core.gateway.api;
 
 import io.digitalreactor.core.ProjectManagerVerticle;
+import io.digitalreactor.core.SummaryDispatcherVerticle;
 import io.digitalreactor.core.SummaryStorageVerticle;
 import io.digitalreactor.core.application.User;
 import io.digitalreactor.core.gateway.api.dto.ProjectDto;
@@ -51,6 +52,7 @@ public class ProjectApiController {
         router.route(HttpMethod.GET, "/:id/summary/").handler(this::projectList);
         //TODO[St.maxim] implementation
         router.route(HttpMethod.GET, "/:id/summary/actual").handler(this::actualSummary);
+        router.route(HttpMethod.PUT, "/:id/updateSummary").handler(this::updateSummary);
     }
 
     public Router router() {
@@ -78,6 +80,14 @@ public class ProjectApiController {
             }
 
         });
+    }
+
+    private void updateSummary(RoutingContext routingContext) {
+        String projectId = routingContext.request().getParam("id");
+
+        eventBus.send(SummaryDispatcherVerticle.CREATE_SUMMARY_BY_PROJECT_ID, new JsonObject().put("projectId", projectId));
+
+        routingContext.response().end("send");
     }
 
     private void projectList(RoutingContext routingContext) {

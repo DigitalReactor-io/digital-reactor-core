@@ -15,6 +15,19 @@ $.ajax({
             var html = template({projects: projects});
 
             $("#projects").html(html);
+
+            $(".project-show-action-button").on("click", function () {
+                var self = this;
+                $(this).hide();
+                var projectId = $(this).data("project-id");
+                $.ajax({
+                    url: apiUrl + "/" + projectId + "/updateSummary",
+                    type: 'PUT',
+                    success: function () {
+                        $(self).show();
+                    }
+                });
+            });
         });
     },
     xhrFields: {
