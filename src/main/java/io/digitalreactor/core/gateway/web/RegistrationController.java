@@ -39,9 +39,9 @@ public class RegistrationController {
     private EventBus eventBus;
 
     //TODO[St.Maxim] get from env
-    private String APPLICATION_ID = "b26e324d5a134168b090b3f23e77a0e7";
-    private String APPLICATION_AUTH = "Basic YjI2ZTMyNGQ1YTEzNDE2OGIwOTBiM2YyM2U3N2EwZTc6Yjk3MGJjMWIzOGI3NDE5YWEyN2Y4YjhjM2Q1ZDEzZTA=";
-    private String CLIENT_SECRET = "b970bc1b38b7419aa27f8b8c3d5d13e0";
+    private String APPLICATION_ID = System.getenv("API_APPLICATION_ID");
+    private String APPLICATION_AUTH = System.getenv("API_APPLICATION_AUTH");
+    private String CLIENT_SECRET = System.getenv("API_CLIENT_SECRET");
 
     //TODO[St.Maxim] size limit
     private Map<String, String> temporaryTokenStorage = new HashMap<>();

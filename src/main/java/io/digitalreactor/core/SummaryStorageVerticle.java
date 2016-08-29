@@ -23,11 +23,11 @@ public class SummaryStorageVerticle extends ReactorAbstractVerticle {
     @Override
     public void start() throws Exception {
         JsonObject mongoDbClientConfig = new JsonObject()
-                .put("host", "ds041693.mlab.com")
-                .put("port", 41693)
-                .put("username", "dev-test")
-                .put("password", "sdf7njDAD82")
-                .put("db_name", "dev-digitalreactor");
+                .put("host", System.getenv("DB_MG_HOST"))
+                .put("port", System.getenv("DB_MG_PORT"))
+                .put("username", System.getenv("DB_MG_USERNAME"))
+                .put("password", System.getenv("DB_MG_PASSWORD"))
+                .put("db_name", System.getenv("DB_MG_NAME"));
 
         client = MongoClient.createShared(vertx, mongoDbClientConfig);
 

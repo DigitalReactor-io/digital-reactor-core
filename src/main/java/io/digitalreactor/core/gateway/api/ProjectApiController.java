@@ -37,11 +37,12 @@ public class ProjectApiController {
     public ProjectApiController(Vertx vertx) {
         //TODO[St.maxim] to env
         JsonObject postgreSQLClientConfig = new JsonObject()
-                .put("host", "horton.elephantsql.com")
-                .put("port", 5432)
-                .put("username", "skdqqjmf")
-                .put("password", "OQ2JEategLWNQzfl9sNY-duW7x6N4WY0")
-                .put("database", "skdqqjmf");
+                .put("host", System.getenv("DB_PG_HOST"))
+                .put("port", System.getenv("DB_PG_PORT"))
+                .put("username", System.getenv("DB_PG_USERNAME"))
+                .put("password", System.getenv("DB_PG_PASSWORD"))
+                .put("database", System.getenv("DB_PG_DATABASE"))
+                .put("maxPoolSize", System.getenv("DB_PG_MAX_POOL_SIZE"));
 
         postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);
         router = Router.router(vertx);
