@@ -28,7 +28,7 @@ public class ProjectManagerVerticle extends AbstractVerticle {
     public void start() throws Exception {
         JsonObject mongoDbClientConfig = new JsonObject()
                 .put("host", System.getenv("DB_MG_HOST"))
-                .put("port", System.getenv("DB_MG_PORT"))
+                .put("port", Integer.valueOf(System.getenv("DB_MG_PORT")))
                 .put("username", System.getenv("DB_MG_USERNAME"))
                 .put("password", System.getenv("DB_MG_PASSWORD"))
                 .put("db_name", System.getenv("DB_MG_NAME"));
